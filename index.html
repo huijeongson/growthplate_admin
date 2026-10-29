@@ -1763,6 +1763,19 @@
   .pm-name .tip-b{font-weight:500}
   .au-menus label.pv-chk{width:auto !important;justify-content:flex-start !important;gap:6px !important;padding:0 12px !important;flex:0 0 auto}  .au-menus .pv-chk input{margin:0 !important}
   .modal .au-menus .pv-chk input[type=checkbox],table.perm .pv-chk input[type=checkbox]{width:14px !important;min-width:0 !important;max-width:14px !important;flex:0 0 14px !important}
+  /* v36 메뉴별 수준 */
+  .lv-seg{display:inline-flex;background:var(--c-line-2);border-radius:8px;padding:2px;gap:2px}
+  .lv-seg label{position:relative;display:inline-flex;align-items:center;height:28px;padding:0 10px;border-radius:6px;font-size:12px;font-weight:600;color:var(--c-ink-4);cursor:pointer;white-space:nowrap;margin:0}
+  .lv-seg input{position:absolute;opacity:0;width:1px !important;height:1px !important;top:0;left:0;margin:0}
+  .lv-seg label.on{background:#fff;box-shadow:0 1px 2px rgba(17,24,39,.12)}
+  .lv-seg label.lv-m.on{color:var(--c-pri)}
+  .lv-seg label.lv-v.on{color:var(--c-info)}
+  .lv-seg label.lv-n.on{color:var(--c-ink-3)}
+  .lv-seg label:focus-within{outline:2px solid var(--c-pri);outline-offset:1px}
+  .lv-seg.dis{opacity:.45;pointer-events:none}
+  .au-lv{display:flex;flex-direction:column;border:1px solid var(--c-line);border-radius:var(--r-m);overflow:hidden}
+  .au-row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:8px 12px;font-size:13px;font-weight:600;color:var(--c-ink-2)}
+  .au-row + .au-row{border-top:1px solid var(--c-line-2)}
 </style>
 </head>
 <body>
@@ -6881,6 +6894,83 @@ PAGE_TIP['auth-perm']='마스터 관리자: 모든 메뉴의 모든 권한 · �
 render();
 /* 메뉴 열 제목: 포함 메뉴는 (?) 도움말로 */
 permLabelHtml=function(m){ const t=[m[2]?'포함 메뉴: '+m[2].join(' · '):'',m[3]||''].filter(Boolean).join(' / '); return `<span class="pm-name">${esc(m[1])}${t?tipHtml(t):''}</span>`; };
+render();
+
+/* =====================================================================
+   v36 · 메뉴별 권한 수준: 일반 관리자 [관리|조회|없음] · 뷰어 [조회|없음]
+   ===================================================================== */
+ROLES.splice(0,ROLES.length,['master','마스터 관리자','모든 메뉴의 모든 권한'],['general','일반 관리자','메뉴별로 관리 또는 조회'],['viewer','뷰어','메뉴별로 조회만']);
+const LV_LABEL={m:'관리',v:'조회','':'없음'};
+function lvOpts(role){ return role==='viewer'?['v','']:['m','v','']; }
+function lvOfPerm(p){ p=p||''; return /[cud]/.test(p)?'m':(p.indexOf('r')>=0?'v':''); }
+function lvsOf(a){ const o={}; PERM_MENUS.forEach(function(m){ o[m[0]]=a.master?'m':lvOfPerm((a.perm||{})[m[0]]); }); return o; }
+function defLvs(role){ const o={}; PERM_MENUS.forEach(function(m){ o[m[0]]=role==='viewer'||role==='general'?(m[0]==='auth'?'':'v'):''; }); return o; }
+function permOfLvs(lv){ const p={}; PERM_MENUS.forEach(function(m){ p[m[0]]=lv[m[0]]==='m'?'crud':(lv[m[0]]==='v'?'r':''); }); return p; }
+accRole=function(a){ if(a.master) return 'master'; if(a.role) return a.role; return PERM_MENUS.some(function(m){ return /[cud]/.test((a.perm||{})[m[0]]||''); })?'general':'viewer'; };
+draftOf=function(ai){ const a=AUTH_ACCOUNTS[ai]; return state.permDraft[ai]||{role:accRole(a),lv:lvsOf(a)}; };
+setDraftRole=function(ai,role){ const d=draftOf(ai); let lv=Object.assign({},d.lv);
+  if(role==='viewer') PERM_MENUS.forEach(function(m){ if(lv[m[0]]==='m') lv[m[0]]='v'; });
+  if(role==='general'&&d.role!=='general') lv=Object.assign(defLvs('general'),d.role==='viewer'?d.lv:{});
+  state.permDraft[ai]={role:role,lv:lv}; render(); };
+function setDraftLv(ai,m,v){ const d=draftOf(ai); const lv=Object.assign({},d.lv); lv[m]=v; state.permDraft[ai]={role:d.role,lv:lv}; render(); }
+function lvCheck(role,lv){
+  if(role==='general'&&!PERM_MENUS.some(function(m){ return lv[m[0]]==='m'; })) return '일반 관리자는 관리할 메뉴를 하나 이상 선택해 주세요.';
+  if(role==='viewer'&&!PERM_MENUS.some(function(m){ return lv[m[0]]==='v'; })) return '뷰어는 조회할 메뉴를 하나 이상 선택해 주세요.';
+  return '';
+}
+function lvSummary(lv){ const pick=function(x){ return PERM_MENUS.filter(function(m){ return lv[m[0]]===x; }).map(function(m){ return m[1]; }); }; const a=pick('m'), b=pick('v'); return [a.length?'관리: '+a.join(', '):'',b.length?'조회: '+b.join(', '):''].filter(Boolean).join(' / '); }
+savePermRow=function(ai){
+  if(!guard('auth-perm','u')) return;
+  const a=AUTH_ACCOUNTS[ai], d=draftOf(ai), before=ROLE_NAME[accRole(a)];
+  const err=d.role==='master'?'':lvCheck(d.role,d.lv); if(err){ showToast(err); return; }
+  a.role=d.role; a.master=d.role==='master'; a.perm=a.master?undefined:permOfLvs(d.lv);
+  delete state.permDraft[ai];
+  AUTH_LOGS.unshift([nowStr(),curName(),navPath('auth-perm'),'수정',a.name+' 계정 권한 '+(before===ROLE_NAME[d.role]?'변경 · '+before:before+' → '+ROLE_NAME[d.role])+(a.master?'':' ('+lvSummary(d.lv)+')')]);
+  renderSidebar(); render(); showToast(a.name+' 계정 권한을 저장했습니다.');
+};
+function lvSeg(name,cur,opts,on,disabled){ return `<div class="lv-seg ${disabled?'dis':''}" role="radiogroup">${opts.map(function(o){ return `<label class="lv-${o||'n'} ${cur===o?'on':''}"><input type="radio" name="${name}" value="${o}" ${cur===o?'checked':''} ${disabled?'disabled':''} onchange="${on}">${LV_LABEL[o]}</label>`; }).join('')}</div>`; }
+authPermBody=function(){
+  const me=curEmail();
+  const head=`<tr><th>아이디</th><th>이름</th><th style="width:150px">권한</th>${PERM_MENUS.map(function(m){ return `<th style="text-align:center">${m[1]}</th>`; }).join('')}<th style="text-align:center;width:80px">저장</th></tr>`;
+  const rows=AUTH_ACCOUNTS.map(function(a,ai){
+    const d=draftOf(ai), dirty=!!state.permDraft[ai], self=a.id===me, dis=!!a.disabled;
+    const sel=`<select class="ddl role-sel" ${self||dis?'disabled':''} onchange="setDraftRole(${ai},this.value)">${ROLES.map(function(r){ return `<option value="${r[0]}" ${r[0]===d.role?'selected':''}>${r[1]}</option>`; }).join('')}</select>`;
+    const cells=PERM_MENUS.map(function(m){
+      if(d.role==='master') return '<td style="text-align:center"><span class="pv all">전체</span></td>';
+      const cur=d.lv[m[0]]||''; const v=(d.role==='viewer'&&cur==='m')?'v':cur;
+      return `<td style="text-align:center">${lvSeg('lv-'+ai+'-'+m[0],v,lvOpts(d.role),"setDraftLv("+ai+",'"+m[0]+"',this.value)",dis)}</td>`;
+    }).join('');
+    return `<tr class="${dirty?'row-dirty':''}"><td>${a.id}</td><td style="white-space:nowrap">${a.name}</td><td>${sel}</td>${cells}<td style="text-align:center">${self?'<span style="color:#A3ABB6">-</span>':`<button class="btn-line" ${dirty?'':'disabled'} onclick="savePermRow(${ai})">저장</button>`}</td></tr>`;
+  }).join('');
+  return reqCard()+`<table class="gt perm"><thead>${head}</thead><tbody>${rows}</tbody></table>`;
+};
+/* 등록 팝업: 메뉴별 수준 선택 */
+let auLv=null, auRoleV='general';
+function auMenusHtml(){ return PERM_MENUS.map(function(m){ return `<div class="au-row"><span>${esc(m[1])}</span>${lvSeg('au-'+m[0],auLv[m[0]],lvOpts(auRoleV),"auSet('"+m[0]+"',this.value)")}</div>`; }).join(''); }
+function auSet(m,v){ auLv[m]=v; document.getElementById('au-lv').innerHTML=auMenusHtml(); }
+auRole=function(v){ auRoleV=v; document.querySelectorAll('.role-card').forEach(function(c){ c.classList.toggle('on',c.querySelector('input').value===v); });
+  if(v==='viewer') PERM_MENUS.forEach(function(m){ if(auLv[m[0]]==='m') auLv[m[0]]='v'; });
+  const w=document.getElementById('au-menus'); if(w) w.style.display=v==='master'?'none':''; const l=document.getElementById('au-lv'); if(l) l.innerHTML=auMenusHtml(); };
+const _am36=authModal;
+authModal=function(){
+  auLv=defLvs('general'); auRoleV='general';
+  return _am36().replace(/<div class="ff" id="au-menus">[\s\S]*?<div class="field-err" id="au-err-m"><\/div><\/div>/,
+    `<div class="ff" id="au-menus"><label>메뉴별 권한 <span style="color:#D33A3A">*</span></label><div class="au-lv" id="au-lv">${auMenusHtml()}</div><div class="field-err" id="au-err-m"></div></div>`);
+};
+SCREENS['auth-perm'].modal=authModal;
+saveAuth=function(){
+  const g=function(id){ return document.getElementById(id); };
+  const id=g('au-id').value.trim(), nm=g('au-name').value.trim(), role=auRoleV;
+  let eid=''; if(!id) eid='아이디(이메일)를 입력해 주세요.'; else if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(id)) eid='이메일 형식으로 입력해 주세요.'; else if(AUTH_ACCOUNTS.some(function(a){ return a.id===id; })) eid='이미 등록된 계정입니다.';
+  const enm=nm?'':'이름을 입력해 주세요.', em=role==='master'?'':lvCheck(role,auLv);
+  g('au-err-id').textContent=eid; g('au-err-name').textContent=enm; g('au-err-m').textContent=em;
+  if(eid||enm||em) return;
+  AUTH_ACCOUNTS.push(role==='master'?{id:id,name:nm,master:true,role:'master'}:{id:id,name:nm,role:role,perm:permOfLvs(auLv)});
+  const ri=AUTH_REQUESTS.findIndex(function(r){ return r.email===id; }); if(ri>=0) AUTH_REQUESTS.splice(ri,1);
+  AUTH_LOGS.unshift([nowStr(),curName(),navPath('auth-perm'),'등록',nm+' 계정 등록 ('+ROLE_NAME[role]+(role==='master'?'':' · '+lvSummary(auLv))+')']);
+  closeModal(); showToast(nm+' 계정을 '+ROLE_NAME[role]+'(으)로 등록했습니다.');
+};
+PAGE_TIP['auth-perm']='마스터 관리자: 모든 메뉴의 모든 권한 · 일반 관리자: 메뉴별로 관리(등록·조회·수정·삭제) 또는 조회 · 뷰어: 메뉴별로 조회만. 처음 로그인하는 계정은 [+ 등록]으로 미리 등록합니다.';
 render();
 </script>
 </body>
