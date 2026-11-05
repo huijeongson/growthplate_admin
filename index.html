@@ -2089,6 +2089,43 @@ input.ltb-q{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3
 .adv-sum{font-size:12px;color:var(--c-ink-3)}
 .pf-sec.adv:not(.adv-closed) .adv-sum{display:none}
 .pf-sec.adv-closed .pf-b{display:none}
+/* v52 설문 종류 */
+.sv-kc{display:inline-block;font-size:11px;font-weight:700;border-radius:4px;padding:0 6px;background:#E9F6EF;color:var(--c-pri);margin-right:4px}
+.sv-kc.k2{background:#EEF1FB;color:#3B5BB5}
+select.ltb-sel{height:36px;min-width:120px;width:auto}
+.sv-card-box{margin-top:10px;max-width:820px}
+.svk{max-width:760px}
+.svk-t td{vertical-align:middle}.svk-t input[type=text]{height:34px;width:100%}
+.svk-d{display:block;font-size:11.5px;color:var(--c-ink-3)}
+.svk-n{color:var(--c-ink-3)}
+.svk-sw{display:inline-flex;align-items:center;gap:6px;font-size:13px;cursor:pointer}.svk-sw input{width:16px !important;height:16px;accent-color:var(--c-pri)}
+.svk-lock{font-size:12px;color:var(--c-ink-3)}
+.svk-add{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:14px;padding:12px;background:var(--c-subtle);border-radius:10px}
+.svk-add b{font-size:13px;margin-right:4px}.svk-add input{height:36px;flex:1;min-width:140px}
+.nav-item.nav-emg{margin-top:6px;position:relative}.nav-item.nav-emg::before{content:"";position:absolute;left:12px;right:12px;top:-4px;border-top:1px dashed var(--c-line)}
+/* v53 인라인 미리보기 */
+.pv-layout{display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:20px;align-items:start}
+.pv-layout>.form-card{min-width:0;margin:0}
+.pv-side{position:sticky;top:76px;background:#fff;border:1px solid var(--c-line);border-radius:14px;padding:14px 16px}
+.pv-side-h{display:flex;align-items:baseline;justify-content:space-between;gap:8px;margin-bottom:10px}.pv-side-h b{font-size:13px}.pv-side-h span{font-size:12px;color:var(--c-ink-3)}
+#pv-inline{background:var(--c-subtle);border-radius:10px;padding:12px 0;overflow:hidden}
+.pv-fit{display:flex;justify-content:center;overflow:visible}
+.pv-fit .bm2-device{transform-origin:top center;flex:none;pointer-events:none}
+.pv-fit .bm2-no{display:none}
+.pv-side-n{margin:8px 0 0;font-size:12px;color:var(--c-ink-3)}
+@media (max-width:1180px){ .pv-layout{grid-template-columns:1fr} .pv-side{position:static;max-width:420px} }
+.sv-pc.all{background:#EEF1FB;color:#3B5BB5;font-weight:700}
+.sv-all-note{margin:0 0 16px;padding:12px 16px;border:1px solid #D6DEF5;background:#F5F7FD;border-radius:12px;font-size:13px;color:#2F3F6E;line-height:1.6}
+.sv-all-note.hidden-field{display:none}
+.sv-common{display:flex;align-items:center;gap:10px;flex-wrap:wrap;font-size:13px}
+.svk-sc{font-size:12.5px;color:var(--c-ink-2,#4E5968)}
+.svk-add select{height:36px;width:auto}
+.sv-layout{display:block}
+.sc-per{margin-top:10px}.sc-per.hidden-field{display:none}
+.sc-per-a{color:var(--c-ink-3);font-size:12.5px}.sc-per-r{font-size:12.5px;white-space:nowrap}
+#main table[data-per] td:nth-child(4){max-width:240px}
+#main table[data-per] td:nth-child(4) *{display:block;max-width:240px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#main table[data-per] td:nth-child(4){overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 </style>
 </head>
 <body>
@@ -8157,46 +8194,58 @@ MENU_PERM['survey-main']='product';
 /* ---- 설문 라이브러리 ---- */
 function svAns(list){ return list.map(function(a,i){ return {use:a[2]!==false,score:a[0],text:a[1],face:i,img:true}; }); }
 const SV_BASE=[[5,'완벽하게 잘 이해가 되었어요'],[4,'잘 이해했어요'],[3,'조금 이해가 안돼요'],[2,'전혀 이해가 안돼요'],[1,'하나도 모르겠어요']];
+const SV_KINDS=['이해도 체크','자기점검'];
+const SV_TPL={'이해도 체크':{q:'오늘 배운 내용은 얼마나 잘 이해했나요?',ans:SV_BASE},'자기점검':{q:'오늘 공부 어땠어?',ans:[[5,'아주 만족해요.'],[4,'만족해요.'],[3,'보통이에요.'],[2,'만족하지 않아요.'],[1,'매우 만족하지 않아요.']]}};
+const SV_TOP={'이해도 체크':'학습 완료!','자기점검':'오늘의 자기점검'};
+/* 설문 종류 마스터: 관리자가 추가·미사용 처리 */
+const SV_KIND_META={'이해도 체크':{use:true,scope:'product',desc:'학습 내용을 얼마나 이해했는지 확인',at:'2025-09-01'},'자기점검':{use:true,scope:'all',desc:'오늘 공부를 스스로 돌아보기',at:'2025-05-04'}};
+function svIsAll(k){ return !!(SV_KIND_META[k]&&SV_KIND_META[k].scope==='all'); }
+function svCommonNow(k){ const t=new Date().toISOString().slice(0,10); return SURVEYS.find(function(s){ return s.kind===k&&s.use&&s.period[0]<=t&&t<=s.period[1]; }); }
+function svKindsOn(extra){ return SV_KINDS.filter(function(k){ return SV_KIND_META[k]&&SV_KIND_META[k].use||k===extra; }); }
+function svTpl(k){ return SV_TPL[k]||{q:'',ans:[[5,''],[4,''],[3,''],[2,''],[1,'']]}; }
 const SURVEYS=[
+  {id:'SV-004',name:'자기점검 설문',kind:'자기점검',desc:'오늘 공부 어때?',use:true,period:['2025-05-04','2099-12-31'],q:'오늘 공부 어땠어?',ans:svAns([[5,'아주 만족해요.'],[4,'만족해요.'],[3,'보통이에요.'],[2,'만족하지 않아요.'],[1,'매우 만족하지 않아요.']]),products:[],editor:'최충호',updated:'2026-11-03'},
   {id:'SV-003',name:'스쿨수학 이해도체크',kind:'이해도 체크',desc:'2027 개편 준비',use:false,period:['2027-03-01','2027-12-31'],q:'오늘 공부한 단원은 어땠나요?',ans:svAns([[3,'쉬웠어요'],[2,'보통이에요'],[1,'어려웠어요'],[0,'',false],[0,'',false]]),products:[],editor:'장수호',updated:'2026-10-20'},
   {id:'SV-002',name:'사고력 이해도체크',kind:'이해도 체크',desc:'',use:true,period:['2025-09-01','2050-12-31'],q:'오늘 문제는 얼마나 잘 풀었나요?',ans:svAns([[5,'완벽하게 풀었어요'],[4,'잘 풀었어요'],[3,'조금 어려웠어요'],[2,'많이 어려웠어요'],[1,'',false]]),products:['prod_QPA','prod_QPB'],editor:'최충호',updated:'2026-10-11'},
   {id:'SV-001',name:'서책 이해도체크',kind:'이해도 체크',desc:'서책 공통',use:true,period:['2025-09-01','2050-12-31'],q:'오늘 배운 내용은 얼마나 잘 이해했나요?',ans:svAns(SV_BASE),products:['prod_M','prod_MZ','prod_PSM','prod_MV'],editor:'손희정',updated:'2026-09-30'}
 ];
 growthProducts.rows.forEach(function(r){ if(r.ext) r.ext.survey=null; });
 function svById(id){ return SURVEYS.find(function(s){ return s.id===id; }); }
-function svOfProduct(key){ return SURVEYS.find(function(s){ return s.products.indexOf(key)>=0; }); }
+function svOfProduct(key,kind){ return SURVEYS.find(function(s){ return s.products.indexOf(key)>=0&&(!kind||s.kind===kind); }); }
 function svState(s){ const t=new Date().toISOString().slice(0,10); if(!s.use) return ['미사용','st-end']; if(t<s.period[0]) return ['사용 예정','st-before']; if(t>s.period[1]) return ['기간 종료','st-end']; return ['사용 중','st-ing']; }
 function svFaces(s,big){ return `<span class="svf ${big?'big':''}">${s.ans.filter(function(a){ return a.use; }).map(function(a){ const f=SV_FACES[a.face]||SV_FACES[2]; return `<i style="background:${f[1]}" title="${esc(a.text)} (${a.score}점)">${f[0]}</i>`; }).join('')}</span>`; }
 function svProdName(k){ const r=productRowByKey(k); return r?r.name:k; }
 function svCmsProducts(){ return growthProducts.rows.filter(function(r){ if(r.pending) return false; const l=lkInit(r); return l.links[0]&&l.links[0].type==='cms'; }); }
 
 /* ---- 목록 ---- */
-state.svF=state.svF||{st:'all',q:''};
+state.svF=state.svF||{st:'all',q:'',kind:''};
+function svKindF(v){ state.svF.kind=v; render(); }
 function svFilter(st){ state.svF.st=st; render(); }
 function svQuery(v){ state.svF.q=v; render(); const i=document.getElementById('sv-q'); if(i){ i.focus(); i.setSelectionRange(v.length,v.length); } }
 function surveyList(){
-  const f=state.svF, all=SURVEYS;
+  const f=state.svF, all=SURVEYS.filter(function(s){ return !f.kind||s.kind===f.kind; });
   const cnt={all:all.length,on:all.filter(function(s){ return svState(s)[0]!=='미사용'; }).length,off:all.filter(function(s){ return !s.use; }).length};
   const rows=all.filter(function(s){ if(f.st==='on'&&!s.use) return false; if(f.st==='off'&&s.use) return false; if(f.q&&(s.name+s.q+s.products.map(svProdName).join(' ')).indexOf(f.q)<0) return false; return true; });
   const seg=`<div class="sv-bar"><div class="seg3" role="radiogroup" aria-label="상태">${[['all','전체'],['on','사용'],['off','미사용']].map(function(o){ return `<label class="${f.st===o[0]?'on':''}" onclick="svFilter('${o[0]}')">${o[1]} <b>${cnt[o[0]]}</b></label>`; }).join('')}</div>
+    <select id="sv-kind" class="ddl sv-kf" onchange="svKindF(this.value)" aria-label="설문 종류"><option value="">전체 종류</option>${SV_KINDS.map(function(k){ return `<option ${f.kind===k?'selected':''}>${k}</option>`; }).join('')}</select>
     <input id="sv-q" class="sv-search" type="text" value="${esc(f.q)}" placeholder="설문명 · 질문 · 연결 상품 검색" oninput="svQuery(this.value)"></div>`;
   const body=rows.length?rows.map(function(s){ const st=svState(s), p=s.products;
-    return `<tr data-call="sv:${s.id}"><td><a class="rowlink" onclick="svOpen('${s.id}')"><b>${esc(s.name)}</b></a><small class="sv-sub">${esc(s.kind)} · ${s.id}</small></td>
+    return `<tr data-call="sv:${s.id}"><td><a class="rowlink" onclick="svOpen('${s.id}')"><b>${esc(s.name)}</b></a><small class="sv-sub"><span class="sv-kc ${s.kind==='자기점검'?'k2':''}">${esc(s.kind)}</span> ${s.id}</small></td>
       <td class="sv-qc">${esc(s.q)}</td><td>${svFaces(s)}</td>
-      <td>${p.length?p.slice(0,2).map(function(k){ return `<span class="sv-pc">${esc(svProdName(k))}</span>`; }).join('')+(p.length>2?`<span class="sv-pc more">+${p.length-2}</span>`:''):'<span class="sv-none">연결 없음</span>'}</td>
+      <td>${svIsAll(s.kind)?'<span class="sv-pc all">전체 상품 공통</span>':p.length?p.slice(0,2).map(function(k){ return `<span class="sv-pc">${esc(svProdName(k))}</span>`; }).join('')+(p.length>2?`<span class="sv-pc more">+${p.length-2}</span>`:''):'<span class="sv-none">연결 없음</span>'}</td>
       <td class="sv-pd">${s.period[0]}<br>~ ${s.period[1]}</td><td><span class="chip ${st[1]}">${st[0]}</span></td>
       <td class="sv-up">${s.updated}<small>${esc(s.editor)}</small></td>
       <td><button class="btn-line" onclick="svCopy('${s.id}')">복제</button></td></tr>`; }).join('')
     :'<tr><td colspan="8" class="emptyrow"><div>조건에 맞는 설문이 없습니다.</div></td></tr>';
   const tbl=`<table class="gt sv-t"><thead><tr><th style="width:170px">설문명</th><th>질문</th><th style="width:140px">답변</th><th style="width:220px">연결 상품</th><th style="width:118px">사용기간</th><th style="width:96px">상태</th><th style="width:104px">최근 수정</th><th style="width:72px"></th></tr></thead><tbody>${body}</tbody></table>`;
-  return seg+cardify(tbl,{title:'총 '+rows.length+'건',actions:'<button class="btn btn-primary" onclick="svNew()">+ 등록</button>'});
+  return seg+cardify(tbl,{title:'총 '+rows.length+'건',actions:(can('survey-main','u')?'<button class="btn-line" onclick="svKindOpen()">종류 관리</button>':'')+'<button class="btn btn-primary" onclick="svNew()">+ 등록</button>'});
 }
 SCREENS['survey-main']={title:'설문 관리',desc:'',render:surveyList,card:false};
-PAGE_TIP['survey-main']='설문을 한 번 만들어 여러 상품에 연결합니다. 설문을 고치면 연결된 모든 상품에 같이 반영됩니다. 상품마다 연결할 수 있는 설문은 1개이며, 기본 연결이 CMS 콘텐츠인 상품만 연결할 수 있습니다.';
+PAGE_TIP['survey-main']='설문을 한 번 만들어 여러 상품에 연결합니다. 설문을 고치면 연결된 모든 상품에 같이 반영됩니다. 자기점검처럼 [전체 상품 공통] 종류는 상품을 고르지 않아도 모든 상품에 적용되고, 상품별 종류는 상품마다 1개씩 연결하며, 기본 연결이 CMS 콘텐츠인 상품만 연결할 수 있습니다.';
 
 /* ---- 등록/수정 ---- */
 function svOpen(id){ state.ctx={sv:id}; openEdit('svEdit'); }
-function svNew(pre){ state.ctx={sv:null,pre:pre||null}; openEdit('regSurvey','등록'); }
+function svNew(pre,kind){ state.ctx={sv:null,pre:pre||null,kind:kind||null}; openEdit('regSurvey','등록'); }
 function svCopy(id){
   const s=svById(id); if(!s) return;
   const n=JSON.parse(JSON.stringify(s)); n.id='SV-'+String(SURVEYS.length+1).padStart(3,'0'); n.name=(s.name+' 복사본').slice(0,20); n.use=false; n.products=[]; n.editor=curName(); n.updated=nowStr().slice(0,10);
@@ -8211,36 +8260,37 @@ function svAnsRow(a,i){
       <div class="sv-imgs">${svImgHtml(a.face,false,a.img)}${svImgHtml(a.face,true,a.img)}</div></div>`;
 }
 function svFormHtml(){
-  const id=state.ctx&&state.ctx.sv, s=id?svById(id):{id:null,name:'',kind:'이해도 체크',desc:'',use:true,period:['',''],q:'',ans:svAns(SV_BASE),products:state.ctx&&state.ctx.pre?[state.ctx.pre]:[]};
+  const id=state.ctx&&state.ctx.sv, nk=(state.ctx&&state.ctx.kind)||'이해도 체크', s=id?svById(id):{id:null,name:'',kind:nk,desc:'',use:true,period:['',''],q:svTpl(nk).q,ans:svAns(svTpl(nk).ans),products:state.ctx&&state.ctx.pre?[state.ctx.pre]:[]};
   const prods=svCmsProducts();
-  const plist=prods.map(function(r){ const on=s.products.indexOf(r.editKey)>=0, o=svOfProduct(r.editKey), other=o&&o.id!==s.id?o:null;
-    return `<label class="sv-pi ${on?'on':''}" data-n="${esc(r.code+' '+r.name)}"><input type="checkbox" class="sv-pk" value="${r.editKey}" ${on?'checked':''} onchange="svPk(this)"><span><b>${esc(r.name)}</b><small>${esc(r.code)}</small></span>${other?`<em title="저장하면 이 설문으로 바뀝니다">현재: ${esc(other.name)}</em>`:''}</label>`; }).join('');
+  const plist=prods.map(function(r){ const on=s.products.indexOf(r.editKey)>=0, cur=function(k){ const o=svOfProduct(r.editKey,k); return o&&o.id!==s.id?o.name:''; }, other=cur(s.kind);
+    return `<label class="sv-pi ${on?'on':''}" data-n="${esc(r.code+' '+r.name)}"><input type="checkbox" class="sv-pk" value="${r.editKey}" ${on?'checked':''} onchange="svPk(this)"><span><b>${esc(r.name)}</b><small>${esc(r.code)}</small></span><em class="${other?'':'hidden-field'}" data-cur="${esc(JSON.stringify(SV_KINDS.reduce(function(o,k){ o[k]=cur(k); return o; },{})))}" title="저장하면 이 설문으로 바뀝니다">현재: ${esc(other)}</em></label>`; }).join('');
   const basic=pfSec('sv-basic','기본 정보','','',
     `<div class="pf-grid2">
       ${fieldRow('사용여부',true,`<div class="radio-row">${radioIn('f-sv-use','1',s.use,'사용')}${radioIn('f-sv-use','0',!s.use,'미사용')}</div>`)}
-      ${fieldRow('설문 종류',true,`<select id="f-sv-kind" class="ddl" style="max-width:240px"><option>이해도 체크</option></select>`)}
+      ${fieldRow('설문 종류',true,`<select id="f-sv-kind" class="ddl" style="max-width:240px" onchange="svKind(this.value)">${svKindsOn(s.kind).map(function(k){ return `<option ${s.kind===k?'selected':''}>${k}</option>`; }).join('')}</select>`)}
     </div>
     <div class="pf-grid2">
       ${fieldRow('설문명',true,`<input id="f-sv-name" type="text" maxlength="20" value="${esc(s.name)}" data-req data-max="20" data-label="설문명" placeholder="20자 이내 · 관리용 이름">`)}
       ${fieldRow('사용기간',true,dateRange('f-sv-date',s.period[0],s.period[1],false,true,'설문 사용기간'))}
     </div>
     ${fieldRow('설명',false,`<input id="f-sv-desc" type="text" maxlength="20" value="${esc(s.desc)}" data-max="20" placeholder="관리용 메모 (20자 이내)">`)}`);
-  const qa=pfSec('sv-qa','질문 · 답변','앱에 보이는 내용입니다. 오른쪽 미리보기에서 바로 확인하세요.','',
+  const qa=pfSec('sv-qa','질문 · 답변','학습을 마친 뒤 앱에 보이는 내용입니다.','',
     `${fieldRow('질문',true,`<input id="f-sv-q" type="text" maxlength="50" value="${esc(s.q)}" data-req data-max="50" data-label="질문" placeholder="50자 이내" oninput="svPrev()">`)}
      ${fieldRow('답변',true,`<div class="sv-list"><div class="sv-h"><span>사용</span><span>배점</span><span>답변 문구</span><span>이미지 (기본 · 선택, SVG)</span></div>${s.ans.map(svAnsRow).join('')}</div><div class="fhint">2개 이상 사용해야 합니다. 체크를 끄면 앱에서 숨겨집니다.</div>`)}`);
-  const link=pfSec('sv-link','연결 상품','기본 연결이 CMS 콘텐츠인 상품만 보입니다. 상품마다 설문은 1개만 연결됩니다.','<span class="pf-badge" id="sv-pcnt">'+s.products.length+'개 선택</span>',
+  const allN=`<div id="sv-all-note" class="sv-all-note ${svIsAll(s.kind)?'':'hidden-field'}"><b>전체 상품 공통 설문입니다.</b> 연결할 상품을 고르지 않아도 모든 상품에 적용됩니다. 같은 종류의 설문은 사용기간이 겹치지 않게 1개만 사용할 수 있습니다.</div>`;
+  const link=pfSec('sv-link','연결 상품','기본 연결이 CMS 콘텐츠인 상품만 보입니다. 상품마다 같은 종류의 설문은 1개만 연결됩니다.','<span class="pf-badge" id="sv-pcnt">'+s.products.length+'개 선택</span>',
     `<div class="sv-pbar"><input type="text" placeholder="상품명 · 코드 검색" oninput="svPkFind(this.value)"><button type="button" class="btn-line" onclick="svPkAll(true)">전체 선택</button><button type="button" class="btn-line" onclick="svPkAll(false)">선택 해제</button></div>
      <div class="sv-plist">${plist||'<div class="sv-none">연결할 수 있는 상품이 없습니다.</div>'}</div>`);
   return `<h2 class="pagetitle">${id?esc(s.name):'설문 등록'}</h2>
-    <div class="sv-layout"><div class="form-card pf2" data-pf2>${basic}${qa}${link}
+    <div class="sv-layout"><div class="form-card pf2" data-pf2>${basic}${qa}${allN}${link.replace('<section class="pf-sec" id="sv-link">','<section class="pf-sec '+(svIsAll(s.kind)?'hidden-field':'')+'" id="sv-link">')}
       <div class="form-foot"><button class="btn btn-ghost" onclick="backList()">취소</button><button class="btn btn-primary" onclick="saveForm()">저장</button></div></div>
-      <aside class="sv-side"><div class="sv-side-h">앱 미리보기</div><div id="sv-prev"></div><p class="sv-side-n">학습을 마친 뒤 나오는 설문 화면입니다.</p></aside></div>`;
+      </div>`;
 }
 function svPrev(){
   const box=document.getElementById('sv-prev'); if(!box) return;
   const q=(document.getElementById('f-sv-q')||{}).value||'질문을 입력하세요';
   const ans=[...document.querySelectorAll('.sv-a')].filter(function(a){ return a.querySelector('.sv-u').checked; }).map(function(a){ const f=SV_FACES[+a.getAttribute('data-face')]||SV_FACES[2]; return `<div class="svm-a"><i style="background:${f[1]}">${f[0]}</i><span>${esc(a.querySelector('.sv-t').value||'답변 문구')}</span></div>`; }).join('');
-  box.innerHTML=`<div class="svm"><div class="svm-top">학습 완료!</div><div class="svm-q">${esc(q)}</div><div class="svm-list">${ans||'<div class="sv-none">사용 중인 답변이 없습니다.</div>'}</div><div class="svm-btn">제출하기</div></div>`;
+  box.innerHTML=`<div class="svm"><div class="svm-top">${SV_TOP[(document.getElementById('f-sv-kind')||{}).value]||'학습 완료!'}</div><div class="svm-q">${esc(q)}</div><div class="svm-list">${ans||'<div class="sv-none">사용 중인 답변이 없습니다.</div>'}</div><div class="svm-btn">제출하기</div></div>`;
 }
 function svPk(cb){ cb.closest('.sv-pi').classList.toggle('on',cb.checked); const n=document.querySelectorAll('.sv-pk:checked').length, c=document.getElementById('sv-pcnt'); if(c) c.textContent=n+'개 선택'; markDirty(); }
 function svPkFind(v){ document.querySelectorAll('.sv-pi').forEach(function(l){ l.classList.toggle('hidden-field',v&&l.getAttribute('data-n').indexOf(v)<0); }); }
@@ -8253,10 +8303,10 @@ function persistSurvey(){
   Object.assign(s,{name:g('f-sv-name').value.trim(),kind:g('f-sv-kind').value,desc:g('f-sv-desc').value.trim(),use:(document.querySelector('input[name="f-sv-use"]:checked')||{}).value==='1',
     period:[g('f-sv-date-s').value,g('f-sv-date-e').value],q:g('f-sv-q').value.trim(),
     ans:[...document.querySelectorAll('.sv-a')].map(function(a){ return {use:a.querySelector('.sv-u').checked,score:+a.querySelector('.sv-s').value,text:a.querySelector('.sv-t').value.trim(),face:+a.getAttribute('data-face'),img:true}; }),
-    products:[...document.querySelectorAll('.sv-pk:checked')].map(function(c){ return c.value; }),editor:curName(),updated:nowStr().slice(0,10)});
-  SURVEYS.forEach(function(o){ if(o!==s) o.products=o.products.filter(function(k){ return s.products.indexOf(k)<0; }); });
+    products:svIsAll(g('f-sv-kind').value)?[]:[...document.querySelectorAll('.sv-pk:checked')].map(function(c){ return c.value; }),editor:curName(),updated:nowStr().slice(0,10)});
+  SURVEYS.forEach(function(o){ if(o!==s&&o.kind===s.kind) o.products=o.products.filter(function(k){ return s.products.indexOf(k)<0; }); });
   const add=s.products.filter(function(k){ return before.indexOf(k)<0; }).length, rem=before.filter(function(k){ return s.products.indexOf(k)<0; }).length;
-  AUTH_LOGS.unshift([nowStr(),curName(),navPath('survey-main'),isNew?'등록':'수정','설문 "'+s.name+'" '+(isNew?'등록':'수정')+' (연결 상품 '+s.products.length+'개'+(add||rem?' · 추가 '+add+' / 해제 '+rem:'')+')']);
+  AUTH_LOGS.unshift([nowStr(),curName(),navPath('survey-main'),isNew?'등록':'수정','설문 "'+s.name+'" '+(isNew?'등록':'수정')+' ('+(svIsAll(s.kind)?'전체 상품 공통':'연결 상품 '+s.products.length+'개')+(add||rem?' · 추가 '+add+' / 해제 '+rem:'')+')']);
   state.ctx={sv:s.id}; state.flashCall='sv:'+s.id;
   return '"'+s.name+'" 설문이 저장되었습니다.';
 }
@@ -8265,6 +8315,12 @@ EDIT_ROUTES.regSurvey=ER('survey-main',null,'등록',svFormHtml,null,persistSurv
 const _sf46=saveForm;
 saveForm=function(){
   if(state.mode==='edit'&&(state.editKey==='svEdit'||state.editKey==='regSurvey')&&document.querySelectorAll('.sv-u:checked').length<2){ showToast('답변은 2개 이상 사용해야 합니다.'); return; }
+  if(state.mode==='edit'&&(state.editKey==='svEdit'||state.editKey==='regSurvey')){
+    const k=(document.getElementById('f-sv-kind')||{}).value, on=(document.querySelector('input[name="f-sv-use"]:checked')||{}).value==='1';
+    const a=(document.getElementById('f-sv-date-s')||{}).value, b=(document.getElementById('f-sv-date-e')||{}).value, me=state.ctx&&state.ctx.sv;
+    if(svIsAll(k)&&on&&a&&b){ const o=SURVEYS.find(function(x){ return x.id!==me&&x.kind===k&&x.use&&x.period[0]<=b&&a<=x.period[1]; });
+      if(o){ showToast('사용기간이 겹치는 '+k+' 설문 "'+o.name+'"('+o.period[0]+' ~ '+o.period[1]+')이 있습니다. 기간을 조정하거나 기존 설문을 미사용으로 바꿔 주세요.'); return; } }
+  }
   return _sf46.apply(this,arguments);
 };
 
@@ -8278,27 +8334,39 @@ function svCardHtml(s,key){
     <div class="sv-card-f">${others?`<span>다른 상품 ${others}개도 이 설문을 사용 중입니다. 고치면 함께 바뀝니다.</span>`:'<span>이 상품에서만 사용하는 설문입니다.</span>'}<button type="button" class="btn-line" onclick="svOpen('${s.id}')">설문 관리에서 수정</button></div></div>`;
 }
 surveySection=function(r){
-  const cur=svOfProduct(r.editKey);
-  return pfSec('pf-survey','이해도 체크 설문','','',
-    fieldRow('연결 설문',false,`<div class="sv-link-row"><select id="f-sv-link" class="ddl" onchange="svLinkChange(this.value)"><option value="">연결 안 함</option>${SURVEYS.map(function(s){ return `<option value="${s.id}" ${cur&&cur.id===s.id?'selected':''}>${esc(s.name)} · ${svState(s)[0]}</option>`; }).join('')}</select><button type="button" class="btn-line" onclick="svNew('${r.editKey}')">+ 새 설문 만들기</button></div>
-      <div id="sv-card-box">${svCardHtml(cur,r.editKey)}</div>`));
+  return pfSec('pf-survey','설문','상품별 설문은 종류마다 1개씩 연결합니다. 전체 상품 공통 설문은 설문 관리에서 관리합니다.','',
+    SV_KINDS.map(function(k,i){ const cur=svOfProduct(r.editKey,k);
+      if(svIsAll(k)){ if(!(SV_KIND_META[k]&&SV_KIND_META[k].use)) return ''; const c=svCommonNow(k);
+        return fieldRow(k,false,`<div class="sv-common"><span class="sv-pc all">전체 상품 공통</span>${c?`<span>지금 적용 중: <b>${esc(c.name)}</b> (${c.period[0]} ~ ${c.period[1]})</span><button type="button" class="btn-line" onclick="svOpen('${c.id}')">설문 관리에서 보기</button>`:'<span class="sv-none">지금 사용 중인 설문이 없습니다.</span>'}</div>`); }
+      if(!(SV_KIND_META[k]&&SV_KIND_META[k].use)&&!cur) return '';
+      return fieldRow(k,false,`<div class="sv-link-row"><select id="f-sv-link-${i}" class="ddl sv-link" data-kind="${k}" onchange="svLinkChange(${i},this.value)"><option value="">연결 안 함</option>${SURVEYS.filter(function(s){ return s.kind===k; }).map(function(s){ return `<option value="${s.id}" ${cur&&cur.id===s.id?'selected':''}>${esc(s.name)} · ${svState(s)[0]}</option>`; }).join('')}</select><button type="button" class="btn-line" onclick="svNew('${r.editKey}','${k}')">+ 새로 만들기</button></div>
+      <div class="sv-card-box" id="sv-card-box-${i}">${svCardHtml(cur,r.editKey)}</div>`); }).join(''));
 };
-function svLinkChange(v){ const b=document.getElementById('sv-card-box'); if(b) b.innerHTML=svCardHtml(svById(v),state.editKey); markDirty(); }
+function svLinkChange(i,v){ const b=document.getElementById('sv-card-box-'+i); if(b) b.innerHTML=svCardHtml(svById(v),state.editKey); markDirty(); }
+function svKind(k){
+  const q=document.getElementById('f-sv-q'), rows=[...document.querySelectorAll('.sv-a')];
+  const isTpl=Object.keys(SV_TPL).some(function(n){ const t=SV_TPL[n]; return (!q.value||q.value===t.q)&&rows.every(function(a,i){ const v=a.querySelector('.sv-t').value; return !v||(t.ans[i]&&t.ans[i][1]===v); }); });
+  if(isTpl){ const T=svTpl(k); q.value=T.q; rows.forEach(function(a,i){ const t=T.ans[i]; if(!t) return; const cb=a.querySelector('.sv-u'); if(!cb.checked){ cb.checked=true; svUse(cb); } a.querySelector('.sv-t').value=t[1]; a.querySelector('.sv-s').value=t[0]; }); }
+  document.querySelectorAll('.sv-pi em').forEach(function(e){ let m={}; try{ m=JSON.parse(e.getAttribute('data-cur')||'{}'); }catch(x){} const v=m[k]||''; e.textContent='현재: '+v; e.classList.toggle('hidden-field',!v); });
+  const all=svIsAll(k), ln=document.getElementById('sv-link'), nt=document.getElementById('sv-all-note'); if(ln) ln.classList.toggle('hidden-field',all); if(nt) nt.classList.toggle('hidden-field',!all);
+  svPrev(); markDirty();
+}
 const _pp46=persistProduct;
 persistProduct=function(){
-  const sel=document.getElementById('f-sv-link'), key=state.editKey, msg=_pp46.apply(this,arguments);
+  const sels=[...document.querySelectorAll('select.sv-link')].map(function(x){ return {k:x.getAttribute('data-kind'),v:x.value}; }), key=state.editKey, msg=_pp46.apply(this,arguments);
   const r=productRowByKey(key), sec=document.getElementById('pf-survey');
-  if(sel&&r&&sec&&!sec.classList.contains('hidden-field')){
-    const v=sel.value, was=svOfProduct(r.editKey);
-    SURVEYS.forEach(function(s){ s.products=s.products.filter(function(k){ return k!==r.editKey; }); });
-    if(v){ svById(v).products.push(r.editKey); }
-    if((was&&was.id)!==(v||undefined)&&AUTH_LOGS[0]) AUTH_LOGS[0][4]+=' · 연결 설문: '+(was?was.name:'없음')+' → '+(v?svById(v).name:'없음');
+  if(sels.length&&r&&sec&&!sec.classList.contains('hidden-field')){
+    sels.forEach(function(o){ const was=svOfProduct(r.editKey,o.k);
+      SURVEYS.forEach(function(s){ if(s.kind===o.k) s.products=s.products.filter(function(k){ return k!==r.editKey; }); });
+      if(o.v){ svById(o.v).products.push(r.editKey); }
+      if((was&&was.id)!==(o.v||undefined)&&AUTH_LOGS[0]) AUTH_LOGS[0][4]+=' · '+o.k+': '+(was?was.name:'없음')+' → '+(o.v?svById(o.v).name:'없음'); });
     if(r.ext) r.ext.survey=null;
   }
   return msg;
 };
 Object.keys(EDIT_ROUTES).forEach(function(k){ if(EDIT_ROUTES[k].kind==='product') EDIT_ROUTES[k].persist=persistProduct; });
-TIPS['연결 설문']='설문 관리에서 만든 설문 중 하나를 연결합니다. 설문 내용은 설문 관리에서 고치며, 같은 설문을 쓰는 상품에 함께 반영됩니다.';
+TIPS['자기점검']='학습 후 학생이 스스로 오늘 공부를 돌아보는 설문입니다. 설문 관리에서 만든 자기점검 설문 중 하나를 연결합니다.';
+TIPS['이해도 체크']='설문 관리에서 만든 설문 중 하나를 연결합니다. 설문 내용은 설문 관리에서 고치며, 같은 설문을 쓰는 상품에 함께 반영됩니다.';
 
 /* 다른 메뉴의 상세로 이동할 때 사이드바·경로를 그 메뉴로 맞춤 (이전 버튼은 원래 화면으로) */
 const _oe46=openEdit;
@@ -8306,6 +8374,48 @@ openEdit=function(k,end){ const x=_oe46.apply(this,arguments); const r=EDIT_ROUT
 const _r46=render;
 render=function(){ const x=_r46.apply(this,arguments); try{ svPrev(); }catch(e){} return x; };
 render();
+
+/* ---- 설문 종류 관리 (모달) ---- */
+function svKindCount(k){ return SURVEYS.filter(function(s){ return s.kind===k; }).length; }
+function svKindOpen(){
+  const rows=SV_KINDS.map(function(k){ const m=SV_KIND_META[k]||{use:true}, n=svKindCount(k);
+    return `<tr><td><b>${esc(k)}</b><small class="svk-d">${esc(m.desc||'')}</small></td><td><input class="svk-top" data-k="${esc(k)}" type="text" maxlength="15" value="${esc(SV_TOP[k]||'')}" placeholder="예: 학습 완료!" aria-label="${esc(k)} 앱 상단 문구"></td><td class="svk-sc">${m.scope==='all'?'전체 상품 공통':'상품별 연결'}</td><td class="svk-n">${n}개</td>
+      <td><label class="svk-sw"><input type="checkbox" ${m.use?'checked':''} onchange="svKindUse('${esc(k)}',this.checked)"> ${m.use?'사용':'미사용'}</label></td>
+      <td>${n?'<span class="svk-lock" title="설문이 있어 삭제할 수 없습니다. 미사용으로 바꾸세요.">삭제 불가</span>':`<button class="btn-line danger" onclick="svKindDel('${esc(k)}')">삭제</button>`}</td></tr>`; }).join('');
+  document.getElementById('modalroot').innerHTML=`<div class="modal-dim" onclick="closeAppMenuModal()"><div class="modal wide svk" onclick="event.stopPropagation()" role="dialog" aria-label="설문 종류 관리">
+    <div class="modal-hd"><b>설문 종류 관리</b><span class="modal-x" onclick="closeAppMenuModal()">&#10005;</span></div>
+    <div class="modal-body">
+      <table class="gt svk-t"><thead><tr><th>종류명</th><th style="width:200px">앱 상단 문구</th><th style="width:120px">적용 범위</th><th style="width:60px">설문</th><th style="width:100px">사용여부</th><th style="width:90px"></th></tr></thead><tbody>${rows}</tbody></table>
+      <div class="svk-add"><b>새 종류 추가</b>
+        <input id="svk-name" type="text" maxlength="10" placeholder="종류명 (10자 이내)">
+        <input id="svk-desc" type="text" maxlength="20" placeholder="설명 (선택, 20자)">
+        <input id="svk-top" type="text" maxlength="15" placeholder="앱 상단 문구 (선택)">
+        <select id="svk-scope" class="ddl" aria-label="적용 범위"><option value="product">상품별 연결</option><option value="all">전체 상품 공통</option></select>
+        <button class="btn btn-primary" onclick="svKindAdd()">추가</button></div>
+      <div class="field-err" id="svk-err"></div>
+      <p class="fhint" style="margin:8px 0 0">미사용 종류는 새 설문을 만들 때 고를 수 없고, 상품 상세에서도 숨겨집니다. 이미 연결된 설문은 그대로 유지됩니다.</p>
+    </div>
+    <div class="modal-ft"><button class="btn btn-ghost" onclick="closeAppMenuModal()">닫기</button><button class="btn btn-primary" onclick="svKindSaveTop()">저장</button></div></div></div>`;
+}
+function svKindLog(op,txt){ AUTH_LOGS.unshift([nowStr(),curName(),navPath('survey-main'),op,txt]); }
+function svKindAdd(){
+  const g=function(id){ return (document.getElementById(id)||{}).value.trim(); }, n=g('svk-name'), err=document.getElementById('svk-err');
+  if(!n){ err.textContent='종류명을 입력해 주세요.'; return; }
+  if(SV_KINDS.indexOf(n)>=0){ err.textContent='이미 있는 종류명입니다.'; return; }
+  SV_KINDS.push(n); SV_KIND_META[n]={use:true,scope:(document.getElementById('svk-scope')||{}).value||'product',desc:g('svk-desc'),at:nowStr().slice(0,10)}; if(g('svk-top')) SV_TOP[n]=g('svk-top');
+  svKindLog('등록','설문 종류 "'+n+'" 등록 ('+(SV_KIND_META[n].scope==='all'?'전체 상품 공통':'상품별 연결')+')'); svKindOpen(); render(); svKindOpen(); showToast('"'+n+'" 종류를 추가했습니다. 이제 설문을 등록할 때 고를 수 있습니다.');
+}
+function svKindUse(k,on){ SV_KIND_META[k]=SV_KIND_META[k]||{}; SV_KIND_META[k].use=on; svKindLog('수정','설문 종류 "'+k+'" '+(on?'사용':'미사용')+'으로 변경'); render(); svKindOpen(); }
+function svKindDel(k){
+  if(svKindCount(k)){ showToast('설문이 있는 종류는 삭제할 수 없습니다.'); return; }
+  askConfirm('"'+k+'" 종류를 삭제할까요?','삭제하면 목록과 선택지에서 사라지며, 변경 이력에는 남습니다.','삭제',function(){
+    SV_KINDS.splice(SV_KINDS.indexOf(k),1); SV_KIND_META[k]&&(SV_KIND_META[k].deleted=true); svKindLog('삭제','설문 종류 "'+k+'" 삭제'); if(state.svF.kind===k) state.svF.kind=''; render(); svKindOpen(); },{danger:true});
+}
+function svKindSaveTop(){
+  let ch=0; document.querySelectorAll('.svk-top').forEach(function(i){ const k=i.getAttribute('data-k'), v=i.value.trim(); if((SV_TOP[k]||'')!==v){ SV_TOP[k]=v; ch++; } });
+  if(ch) svKindLog('수정','설문 종류 앱 상단 문구 '+ch+'건 수정');
+  closeAppMenuModal(); render(); showToast(ch?'저장했습니다.':'바뀐 내용이 없습니다.');
+}
 /* v47 · 상품 상세: 학습 매체 · 추가 연결 삭제 → '학습 연결' 1개만 */
 LK_TYPES.forEach(function(t){ t.media=['book','digital']; });
 LINK_SVC.forEach(function(s){ s.media=['book','digital']; });
@@ -8382,6 +8492,7 @@ function ltbApply(){
     const left=th.firstElementChild; const box=document.createElement('div'); box.className='ltb-l'; box.appendChild(seg); if(left) left.replaceWith(box); else th.prepend(box);
     let ta=th.querySelector('.ta'); if(!ta){ ta=document.createElement('span'); ta.className='ta'; th.appendChild(ta); }
     if(q){ q.classList.add('ltb-q'); const fs=q.closest('.flt-search'); ta.prepend(q); if(fs) fs.remove(); }
+    if(wrap!==seg) [...wrap.querySelectorAll('select')].reverse().forEach(function(sl){ sl.classList.add('ltb-sel'); ta.prepend(sl); });
     th.classList.add('ltb');
     if(wrap!==seg&&!wrap.querySelector('input,select,button')) wrap.remove();
   });
@@ -8615,6 +8726,132 @@ render=function(){
   return x;
 };
 PAGE_TIP['auth-perm']=String(PAGE_TIP['auth-perm']||'').replace(/ ?처음 로그인하는 계정은[^.]*\./,' 새 관리자는 [+ 등록]으로 계정과 권한을 먼저 등록합니다.');
+render();
+/* =====================================================================
+   v53 · 미리보기를 팝업 대신 등록·수정 화면 오른쪽에 고정 (입력하는 대로 갱신)
+   대상: 배너·팝업 / 메시지 / 공지사항 등록·수정
+   ===================================================================== */
+function pvBuild(){
+  const T=pvTarget(); if(!T) return null;
+  let screen='', cap='';
+  if(T.kind==='banner'){
+    const thumb=(T.row&&T.row.thumb)||'#CFE8D8', img=pvImg()||(T.row&&T.row.img)||null;
+    const t=(state.reg&&state.editKey==='regBanner'&&state.reg.type)||T.t;
+    const x={t:t,r:{editKey:'__pv',label:pvVal('f-title')||'제목을 입력하세요',thumb:thumb,img:img,period:''}};
+    const L={login:[],top:[],list:[],popup:[]}; L[t]=[x];
+    const off=state.bpPopOff; state.bpPopOff=false;
+    screen=t==='login'?bmLogin(L):bmMyclass(L);
+    state.bpPopOff=off;
+    if(img&&t!=='login') screen=screen.replace(/(class="bm4-lb[^"]*"[^>]*style=")/,'$1background-image:url(\''+img+'\');background-size:cover;').replace(/(class="bm2-pop-img" style=")/,'$1background-image:url(\''+img+'\');background-size:cover;');
+    return {screen:screen,cap:BT_LABEL[t]||'',cls:t==='login'?'login':'myclass'};
+  }
+  if(T.kind==='msg'){
+    const inp=document.querySelector('#msg-list input'), msg=(inp&&inp.value.trim())||'메시지를 입력하세요';
+    screen=bmMyclass({login:[],top:[],list:[],popup:[]}).replace('멋져요! 벌써 1개의 레슨을 완료했어요.','<b class="pv-hl">'+esc(msg)+'</b>');
+    return {screen:screen,cap:'마이클래스 카드 메시지',cls:'myclass'};
+  }
+  const be=document.querySelector('#main .rte-edit'), body=be?be.innerText:'';
+  const s=pvVal('f-date-s').slice(0,10), e=pvVal('f-date-e').slice(0,10), img=pvImg();
+  screen=`<div class="nt-scr"><div class="nt-hd"><span>&#8249;</span><b>공지사항</b></div>
+    <div class="nt-t">${esc(pvVal('f-title')||'제목을 입력하세요')}</div><div class="nt-d">${s||'-'} ~ ${e||'-'}</div>
+    ${img?`<div class="nt-img" style="background-image:url('${img}')"></div>`:(state.editKey!=='regNotice'&&document.querySelector('#up-main .up-prev, #up-main .up-mock')?`<div class="nt-img nt-ph">${esc(pvVal('f-title'))}</div>`:'')}
+    <div class="nt-b">${esc(body.trim()||'내용을 입력하세요').replace(/\n/g,'<br>')}</div></div>`;
+  return {screen:screen,cap:'공지사항 상세',cls:'myclass'};
+}
+function pvInline(){
+  const box=document.getElementById('pv-inline'); if(!box) return;
+  const P=pvBuild(); if(!P) return;
+  const cap=document.getElementById('pv-inline-cap'); if(cap) cap.textContent=P.cap;
+  box.innerHTML=`<div class="pv-fit"><div class="bm2-device ${P.cls}">${P.screen}</div></div>`;
+  const fit=box.firstElementChild, dev=fit.firstElementChild;
+  const w=dev.offsetWidth||1, sc=Math.min(1,(box.clientWidth-4)/w);
+  dev.style.transform='scale('+sc+')'; fit.style.height=Math.ceil(dev.offsetHeight*sc)+'px';
+}
+let _pvT=null;
+function pvSoon(){ clearTimeout(_pvT); _pvT=setTimeout(pvInline,120); }
+openPreview=function(){ const b=document.getElementById('pv-inline'); if(b) b.scrollIntoView({block:'nearest',behavior:'smooth'}); };
+function pvMount(){
+  const main=document.getElementById('main'); if(!main) return;
+  main.querySelectorAll('.pv-btn').forEach(function(b){ b.remove(); });
+  if(state.mode!=='edit'||!pvTarget()||main.querySelector('.pv-layout')) return;
+  const card=main.querySelector('.form-card'); if(!card||card.closest('.sv-layout')) return;
+  const lay=document.createElement('div'); lay.className='pv-layout';
+  card.parentNode.insertBefore(lay,card); lay.appendChild(card);
+  lay.insertAdjacentHTML('beforeend',`<aside class="pv-side" aria-label="앱 미리보기"><div class="pv-side-h"><b>앱 미리보기</b><span id="pv-inline-cap"></span></div><div id="pv-inline"></div><p class="pv-side-n">입력하는 대로 바로 바뀝니다.</p></aside>`);
+  if(!main.getAttribute('data-pv')){ main.setAttribute('data-pv','1');
+    ['input','change'].forEach(function(ev){ main.addEventListener(ev,function(){ if(document.getElementById('pv-inline')) pvSoon(); }); });
+    main.addEventListener('click',function(){ if(document.getElementById('pv-inline')) pvSoon(); });
+  }
+  pvInline();
+}
+const _r53=render;
+render=function(){ const x=_r53.apply(this,arguments); try{ pvMount(); }catch(e){ console.error(e); } return x; };
+window.addEventListener('resize',function(){ if(document.getElementById('pv-inline')) pvSoon(); });
+render();
+/* =====================================================================
+   v54 · 앱 메뉴(LNB) 관리 › 서비스 바로가기: 상시 노출 / 기간 노출
+   ===================================================================== */
+(function(){
+  SLIDE_DATA.shortcuts.forEach(function(s){ if(!s.per) s.per={mode:'always'}; });
+  const lg=SLIDE_DATA.shortcuts.find(function(s){ return s.name==='리그오브매스'; });
+  if(lg) lg.per={mode:'range',s:'2026-07-01',e:'2026-08-31'};
+  if(typeof LNB_SETS!=='undefined'&&LNB_SETS.rsv) LNB_SETS.rsv.shortcuts.forEach(function(s){ if(!s.per) s.per={mode:'always'}; });
+})();
+function scPer(s){ return (s&&s.per)||{mode:'always'}; }
+function scState(s){
+  if(!s.show) return {k:'off',t:'숨김',c:'st-end'};
+  const p=scPer(s); if(p.mode!=='range') return {k:'ing',t:'노출 중',c:'st-ing'};
+  if(TODAY<p.s) return {k:'pre',t:'노출 예정',c:'st-before'};
+  if(TODAY>p.e) return {k:'end',t:'노출 종료',c:'st-end'};
+  return {k:'ing',t:'노출 중',c:'st-ing'};
+}
+function scPerText(s){ const p=scPer(s); return p.mode==='range'?p.s+' ~ '+p.e:'상시'; }
+function scPerMode(v){ const r=document.getElementById('sc-per-range'); if(r) r.classList.toggle('hidden-field',v!=='range'); markDirty(); }
+/* 등록·수정 폼: '노출 기간' 추가 */
+const _scf54=scFormHtml;
+scFormHtml=function(){
+  const h=_scf54.apply(this,arguments), isNew=!state.ctx.id, s=isNew?{per:{mode:'always'}}:(lnbFind('sc',state.ctx.id)||{}), p=scPer(s), rng=p.mode==='range';
+  const row=fieldRow('노출 기간',true,`<div class="radio-row">${radioIn('f-sc-per','always',!rng,'상시 노출','onchange="scPerMode(this.value)"')}${radioIn('f-sc-per','range',rng,'기간 노출','onchange="scPerMode(this.value)"')}</div>
+    <div id="sc-per-range" class="sc-per ${rng?'':'hidden-field'}">${dateRange('f-sc-per',p.s||'',p.e||'',false,true,'노출 기간')}<div class="fhint">기간이 끝나면 LNB에서 자동으로 빠집니다. 노출을 끄면 기간과 관계없이 숨겨집니다.</div></div>`);
+  let out=h.replace('<div class="frow"><div class="flabel">링크 방식',row+'<div class="frow"><div class="flabel">링크 방식');
+  if(!isNew){ const st=scState(s); out=out.replace(/<div class="stat-line"><span class="chip [^"]*">[^<]*<\/span>/,'<div class="stat-line"><span class="chip '+st.c+'">'+st.t+'</span><span class="sl-sep">·</span><span>'+scPerText(s)+'</span>'); }
+  return out;
+};
+EDIT_ROUTES.scEdit.render=scFormHtml; EDIT_ROUTES.regSc.render=scFormHtml;
+const _sf54=saveForm;
+saveForm=function(){
+  if(state.mode==='edit'&&(state.editKey==='scEdit'||state.editKey==='regSc')&&(document.querySelector('input[name="f-sc-per"]:checked')||{}).value==='range'){
+    const a=(document.getElementById('f-sc-per-s')||{}).value, b=(document.getElementById('f-sc-per-e')||{}).value;
+    if(!a||!b){ showToast('노출 기간의 시작일과 종료일을 입력해 주세요.'); return; }
+    if(a>b){ showToast('종료일은 시작일 이후여야 합니다.'); return; }
+  }
+  return _sf54.apply(this,arguments);
+};
+const _psc54=persistSc;
+persistSc=function(){
+  const mode=(document.querySelector('input[name="f-sc-per"]:checked')||{}).value||'always';
+  const a=(document.getElementById('f-sc-per-s')||{}).value, b=(document.getElementById('f-sc-per-e')||{}).value;
+  const msg=_psc54.apply(this,arguments);
+  const id=String(state.flashCall||'').replace(/^sc:/,''), s=lnbFind('sc',id);
+  if(s){ s.per=mode==='range'?{mode:'range',s:a,e:b}:{mode:'always'}; if(AUTH_LOGS[0]) AUTH_LOGS[0][4]=String(AUTH_LOGS[0][4]).replace(/\((노출|숨김)\)$/,'('+(s.show?'노출':'숨김')+' · '+scPerText(s)+')'); }
+  return msg;
+};
+EDIT_ROUTES.scEdit.persist=persistSc; EDIT_ROUTES.regSc.persist=persistSc;
+/* 목록: '노출 기간' 열 + 노출 상태를 기간 기준으로 */
+function scListFix(){
+  if(state.menu!=='content-lnb'||state.mode!=='list') return;
+  document.querySelectorAll('#main tr[data-call^="sc:"]').forEach(function(tr){
+    const t=tr.closest('table'); if(t&&!t.getAttribute('data-per')){ t.setAttribute('data-per','1'); const ths=t.querySelectorAll('thead th'); ths.forEach(function(th){ if(th.textContent.trim()==='노출') th.insertAdjacentHTML('afterend','<th style="width:190px">노출 기간</th>'); }); }
+    const s=lnbFind('sc',tr.getAttribute('data-call').slice(3)); if(!s||tr.querySelector('.sc-per-td')) return;
+    const st=scState(s), tds=[...tr.children], hi=[...t.querySelectorAll('thead th')].findIndex(function(th){ return th.textContent.trim()==='노출'; });
+    const td=tds[hi]; if(!td) return;
+    td.innerHTML='<span class="chip '+st.c+'">'+st.t+'</span>';
+    td.insertAdjacentHTML('afterend','<td class="sc-per-td">'+(scPer(s).mode==='range'?'<span class="sc-per-r">'+scPerText(s)+'</span>':'<span class="sc-per-a">상시</span>')+'</td>');
+  });
+}
+const _r54=render;
+render=function(){ const x=_r54.apply(this,arguments); try{ scListFix(); }catch(e){ console.error(e); } return x; };
+TIPS['노출 기간']='상시 노출은 노출을 켜 둔 동안 계속 보입니다. 기간 노출은 시작일부터 종료일까지만 LNB에 보이고, 기간이 끝나면 자동으로 빠집니다.';
 render();
 </script>
 </body>
