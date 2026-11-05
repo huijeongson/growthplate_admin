@@ -2126,6 +2126,12 @@ select.ltb-sel{height:36px;min-width:120px;width:auto}
 #main table[data-per] td:nth-child(4){max-width:240px}
 #main table[data-per] td:nth-child(4) *{display:block;max-width:240px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 #main table[data-per] td:nth-child(4){overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.sc-st{display:flex;align-items:center;gap:6px;white-space:nowrap}
+.sc-tg{height:26px !important;padding:0 8px !important;font-size:12px !important}
+.sc-one{grid-template-columns:1fr !important}.sc-one input#f-sc-name{max-width:420px}
+.pm-new{display:inline-block;margin-left:6px;font-size:11px;font-weight:700;color:#fff;background:var(--c-pri);border-radius:4px;padding:1px 6px;vertical-align:middle}
+tr.pm-new-row td{background:#F4FBF7}
+.lk-g label .req{color:#E5484D;font-style:normal;font-size:8px;vertical-align:top;margin-left:2px}
 </style>
 </head>
 <body>
@@ -8852,6 +8858,107 @@ function scListFix(){
 const _r54=render;
 render=function(){ const x=_r54.apply(this,arguments); try{ scListFix(); }catch(e){ console.error(e); } return x; };
 TIPS['노출 기간']='상시 노출은 노출을 켜 둔 동안 계속 보입니다. 기간 노출은 시작일부터 종료일까지만 LNB에 보이고, 기간이 끝나면 자동으로 빠집니다.';
+render();
+/* =====================================================================
+   v55 · 신규 상품 등록 ③: 등록 화면 대신 '신규 상품 목록 반영'
+   ①상품 DB 동기화 → ②상품과정 DB 동기화 → ③신규 상품 반영(목록 맨 위에 '신규' 표시)
+   ===================================================================== */
+state.syncDone.newIn=false;
+productSteps=function(){
+  const d=state.syncDone, can=canDo('product-main','u');
+  const s1=d.product?'done':'now', s2=d.course?'done':(d.product?'now':'lock');
+  const left=DREAMS_NEW.length, s3=d.newIn&&!left?'done':((d.product&&d.course)?'now':'lock');
+  const meta=s3==='done'?'반영 완료':(s3==='now'?(left?'신규 '+left+'건':'신규 없음'):'');
+  return `<section class="pm-flow pm3" aria-label="신규 상품 등록 순서">
+    <span class="pm3-h">신규 상품 등록</span>
+    <div class="pm3-steps">
+      ${pmChip(1,'상품 DB 동기화',SYNC.product+'차 · '+SYNC_AT.product.slice(5),can?s1:'lock',"openSyncModal('product')")}
+      <span class="pm3-ar" aria-hidden="true">&#8250;</span>
+      ${pmChip(2,'상품과정 DB 동기화',SYNC.course+'차 · '+SYNC_AT.course.slice(5),can?s2:'lock',"openSyncModal('course')")}
+      <span class="pm3-ar" aria-hidden="true">&#8250;</span>
+      ${pmChip(3,'신규 상품 반영',meta,(can&&(left||s3==='done'))?s3:'lock','syncNewProducts()')}
+    </div>
+  </section>`;
+};
+function syncNewProducts(){
+  if(!guard('product-main','c')) return;
+  if(!(state.syncDone.product&&state.syncDone.course)){ showToast('①, ② 동기화를 먼저 실행해 주세요.'); return; }
+  if(!DREAMS_NEW.length){ showToast('목록에 반영할 신규 상품이 없습니다.'); return; }
+  const added=DREAMS_NEW.splice(0,DREAMS_NEW.length);
+  const base=growthProducts.rows.length;
+  added.map(function(p,i){ return [p,i]; }).reverse().forEach(function(x){ const p=x[0];
+    const row={ord:base+x[1]+1,code:p.code,name:p.name,type:p.type,subject:p.subject,cnt:p.cnt,period:TODAY+' ~ 2099-12-31',editKey:'prod_'+p.code,isNew:true,
+      ext:{media:p.type==='서책'?'book':'digital',links:[{type:p.type==='서책'?'cms':'app'}],growth:false,use:false,survey:null}};
+    growthProducts.rows.unshift(row); growthProducts.total++;
+    registerProductRoute(row.editKey); EDIT_ROUTES[row.editKey].persist=persistProduct;
+  });
+  state.syncDone.newIn=true; state.prod.growth='all';
+  AUTH_LOGS.unshift([nowStr(),curName(),navPath('product-main'),'등록','신규 상품 '+added.length+'건 목록 반영 ('+added.map(function(p){ return p.code; }).join(', ')+')']);
+  render();
+  showToast('신규 상품 '+added.length+'건을 목록 맨 위에 반영했습니다. 미사용 상태이니 정보를 확인한 뒤 사용으로 바꿔 주세요.');
+}
+/* 목록: 신규 라벨 */
+function newTagFix(){
+  if(state.menu!=='product-main'||state.mode!=='list') return;
+  growthProducts.rows.forEach(function(r){ if(!r.isNew) return;
+    const a=document.querySelector('#main a.rowlink[onclick="openEdit(\''+r.editKey+'\')"]'); if(!a||a.parentElement.querySelector('.pm-new')) return;
+    a.insertAdjacentHTML('afterend','<span class="pm-new">신규</span>'); const tr=a.closest('tr'); tr.classList.add('pm-new-row'); });
+  const tb=document.querySelector('#main tbody'); if(tb){ [...tb.querySelectorAll('tr.pm-new-row')].reverse().forEach(function(tr){ tb.insertBefore(tr,tb.firstChild); }); }
+}
+/* 저장하면 신규 라벨 해제 */
+const _pp55=persistProduct;
+persistProduct=function(){ const r=productRowByKey(state.editKey); const m=_pp55.apply(this,arguments); if(r&&r.isNew){ r.isNew=false; if(AUTH_LOGS[0]) AUTH_LOGS[0][4]=String(AUTH_LOGS[0][4])+' · 신규 확인'; } return m; };
+Object.keys(EDIT_ROUTES).forEach(function(k){ if(EDIT_ROUTES[k].kind==='product') EDIT_ROUTES[k].persist=persistProduct; });
+const _r55=render;
+render=function(){ const x=_r55.apply(this,arguments); try{ newTagFix(); }catch(e){ console.error(e); } return x; };
+render();
+/* =====================================================================
+   v56 · 상품 관리 상세
+   1) 학습 설정: 접기/펼치기 없이 항상 펼침
+   2) 학습 연결 › 개인화링크: 서비스 선택 대신 직접 입력 (등록된 링크가 있으면 값 채움)
+   ===================================================================== */
+advFix=function(){
+  document.querySelectorAll('#main .pf-sec.adv').forEach(function(s){ s.classList.remove('adv','adv-closed'); s.querySelectorAll('.adv-btn,.adv-sum').forEach(function(x){ x.remove(); }); });
+};
+function lkPlinkVal(l){
+  if(!l||l.type!=='plink') return {name:'',btn:'',domain:'',api:''};
+  const s=l.svc?LINK_SVC.find(function(x){ return x.k===l.svc; }):null;
+  return {name:l.name||(s?s.n:''),btn:l.btn||(s?s.btn:''),domain:l.domain||(s?s.domain:''),api:l.api||(s?s.api:'')};
+}
+lkPlinkFields=function(role,l){
+  const v=lkPlinkVal(l), id=function(k){ return 'f-lk-'+role+'-'+k; };
+  return `<div class="lk-g">
+    <label><span>서비스명 <i class="req">&#9679;</i></span><input id="${id('name')}" type="text" value="${esc(v.name)}" data-req data-label="서비스명" data-max="30" placeholder="예: 마카다미아 학습관" oninput="lkUpdate()"></label>
+    <label><span>버튼명 <i class="req">&#9679;</i></span><input id="${id('btn')}" type="text" value="${esc(v.btn)}" data-req data-label="버튼명" data-max="30" placeholder="예: 학습관 바로가기"></label>
+    <label><span>타겟 도메인 <i class="req">&#9679;</i></span><input id="${id('domain')}" type="text" value="${esc(v.domain)}" data-req data-label="타겟 도메인" data-pattern="^https?://" data-pattern-msg="https://로 시작하는 URL을 입력해 주세요." placeholder="https://" oninput="lkUpdate()"></label>
+    <label><span>개인화 API URL <i class="req">&#9679;</i></span><input id="${id('api')}" type="text" value="${esc(v.api)}" data-req data-label="개인화 API URL" data-pattern="^/" data-pattern-msg="/로 시작하는 경로를 입력해 주세요." placeholder="/v1/external/..."></label>
+  </div><div class="fhint">[타겟 도메인] + [개인화 API로 받은 값]으로 연결합니다. (자동 로그인 등)</div>`;
+};
+/* 마카다미아 학습관 연결 여부: 서비스명·도메인으로 판단 (서책 진도 유무 표시용) */
+function lkIsMaca(){ const n=((document.getElementById('f-lk-main-name')||{}).value||'')+' '+((document.getElementById('f-lk-main-domain')||{}).value||''); return /마카다미아|macadamia/i.test(n); }
+const _lku56=lkUpdate;
+lkUpdate=function(){
+  const x=_lku56.apply(this,arguments);
+  const main=lkVal('f-lk-main-type'), media=lkVal('f-media')||'book', ns=document.getElementById('lk-noset');
+  if(ns) ns.classList.toggle('hidden-field',!(main==='plink'&&media==='book'&&lkIsMaca()));
+  return x;
+};
+const _pp56=persistProduct;
+persistProduct=function(){
+  const g=function(id){ const e=document.getElementById(id); return e?e.value.trim():''; };
+  const isP=document.getElementById('lk-wrap')&&lkVal('f-lk-main-type')==='plink';
+  const v={name:g('f-lk-main-name'),btn:g('f-lk-main-btn'),domain:g('f-lk-main-domain'),api:g('f-lk-main-api')}, noset=lkVal('f-lk-noset')==='1', maca=isP&&lkIsMaca();
+  const key=state.editKey, msg=_pp56.apply(this,arguments), r=productRowByKey(key);
+  if(isP&&r&&r.ext){
+    const l={type:'plink',name:v.name,btn:v.btn,domain:v.domain,api:v.api}; if(maca) l.noset=noset;
+    r.ext.links=[l]; r.ext.platform='plink'; r.ext.web2=v.domain; r.ext.papi=v.api;
+    r.ext.study=maca; r.ext.hall=maca?{btn:v.btn,domain:v.domain,api:v.api}:null; r.ext.noset=!!(maca&&noset);
+    for(let i=0;i<Math.min(3,AUTH_LOGS.length);i++){ if(/\(학습 연결: /.test(AUTH_LOGS[i][4])){ AUTH_LOGS[i][4]=String(AUTH_LOGS[i][4]).replace(/\(학습 연결: [^)]*\)/,'(학습 연결: 개인화링크 · '+v.name+')'); break; } }
+  }
+  return msg;
+};
+Object.keys(EDIT_ROUTES).forEach(function(k){ if(EDIT_ROUTES[k].kind==='product') EDIT_ROUTES[k].persist=persistProduct; });
+TIPS['학습 연결']='앱에서 상품의 [학습하기]를 누르면 열리는 학습입니다. 개인화링크는 서비스명·버튼명·타겟 도메인·개인화 API URL을 직접 입력합니다.';
 render();
 </script>
 </body>
