@@ -2132,6 +2132,29 @@ select.ltb-sel{height:36px;min-width:120px;width:auto}
 .pm-new{display:inline-block;margin-left:6px;font-size:11px;font-weight:700;color:#fff;background:var(--c-pri);border-radius:4px;padding:1px 6px;vertical-align:middle}
 tr.pm-new-row td{background:#F4FBF7}
 .lk-g label .req{color:#E5484D;font-style:normal;font-size:8px;vertical-align:top;margin-left:2px}
+.pm-sync1{display:flex;align-items:center;gap:16px;flex-wrap:wrap;padding:14px 20px}
+.pms-tx{display:flex;flex-direction:column;gap:2px}.pms-tx b{font-size:14px}.pms-tx span{font-size:12px;color:var(--c-ink-3)}
+.pms-n{flex:1;font-size:12.5px;color:var(--c-ink-2,#4E5968)}.pms-n b{color:var(--c-ink)}
+.lk-cms-opt{margin-bottom:12px}
+.lk-pane .lk-cms-opt{margin-bottom:14px !important;padding-bottom:14px;border-bottom:1px dashed var(--c-line)}.lk-pane .lk-cms-opt .radio-row{margin-top:4px;min-height:32px;align-items:center}
+.lk-sc{display:flex;flex-direction:column;gap:8px}
+.lk-sc-row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.lk-sc-row select{min-width:280px;height:38px;width:auto !important;flex:0 1 360px}
+.lk-sc-info{display:flex;align-items:center;gap:10px;flex-wrap:wrap;font-size:12.5px;color:var(--c-ink-3);background:var(--c-subtle);border-radius:8px;padding:8px 12px}
+.lk-sc-info code{font-family:ui-monospace,Menlo,monospace;font-size:12px;color:var(--c-ink-2,#4E5968);background:none;word-break:break-all}
+.lk-sc-legacy b{color:var(--c-ink)}
+.lk-chips{grid-template-columns:repeat(auto-fit,minmax(140px,1fr)) !important}
+/* v59 */
+.ev-custom{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:10px}.ev-custom input{height:36px;width:300px}.ev-custom.hidden-field{display:none}
+.ev-custom-l{color:var(--c-pri) !important}
+.evt-num{display:inline-flex;gap:6px}.evt-num.hidden-field{display:none}.evt-num input{height:36px;width:150px}.evt-num input#evt-unit{width:90px}
+.sc-rsv{display:grid;grid-template-columns:200px minmax(0,1fr) minmax(0,1fr);gap:10px;margin-top:10px;padding:12px;background:var(--c-subtle);border-radius:10px;max-width:860px}
+.sc-rsv.hidden-field{display:none}.sc-rsv label{display:flex;flex-direction:column;gap:5px;font-size:12px;font-weight:600;color:var(--c-ink-3)}.sc-rsv label.w2{grid-column:span 2}
+.sc-rsv input{height:36px;width:100%}.sc-rsv .fhint{grid-column:1/-1;margin:0}
+.sc-rsv-tag{display:block;margin-top:3px;font-size:11px;font-weight:700;color:#2F6FE4}
+.lgm-tt{font-size:13px}
+.sv-new-n{font-size:12px;color:#B26A00;background:#FFF4E0;border-radius:6px;padding:4px 8px;align-self:flex-start}
+#cms-hall-link.hidden-field{display:none}
+#nc-hall-link.hidden-field{display:none}
 </style>
 </head>
 <body>
@@ -8312,7 +8335,7 @@ function persistSurvey(){
     products:svIsAll(g('f-sv-kind').value)?[]:[...document.querySelectorAll('.sv-pk:checked')].map(function(c){ return c.value; }),editor:curName(),updated:nowStr().slice(0,10)});
   SURVEYS.forEach(function(o){ if(o!==s&&o.kind===s.kind) o.products=o.products.filter(function(k){ return s.products.indexOf(k)<0; }); });
   const add=s.products.filter(function(k){ return before.indexOf(k)<0; }).length, rem=before.filter(function(k){ return s.products.indexOf(k)<0; }).length;
-  AUTH_LOGS.unshift([nowStr(),curName(),navPath('survey-main'),isNew?'등록':'수정','설문 "'+s.name+'" '+(isNew?'등록':'수정')+' ('+(svIsAll(s.kind)?'전체 상품 공통':'연결 상품 '+s.products.length+'개')+(add||rem?' · 추가 '+add+' / 해제 '+rem:'')+')']);
+  AUTH_LOGS.unshift([nowStr(),curName(),navPath('survey-main'),isNew?'등록':'수정','설문 "'+s.name+'" '+(isNew?'등록':'수정')+' ('+(svIsAll(s.kind)?'전과목 공통':'연결 상품 '+s.products.length+'개')+(add||rem?' · 추가 '+add+' / 해제 '+rem:'')+')']);
   state.ctx={sv:s.id}; state.flashCall='sv:'+s.id;
   return '"'+s.name+'" 설문이 저장되었습니다.';
 }
@@ -8509,72 +8532,6 @@ const _r48=render;
 render=function(){ const x=_r48.apply(this,arguments); try{ ltbApply(); }catch(e){ console.error(e); } return x; };
 render();
 /* =====================================================================
-   v49 · LNB 관리: 예약 세트
-   - 적용 중 세트 1개 + 예약 세트 최대 1개 (기존 슬라이드 메뉴/디테일 2테이블 구조 그대로 사용)
-   - 예약 세트는 적용 시작일시에 자동으로 '적용 중'으로 바뀜
-   ===================================================================== */
-const LNB_SETS={cur:{apps:SLIDE_DATA.apps,shortcuts:SLIDE_DATA.shortcuts,since:'2025-08-01 00:00'},rsv:null};
-state.lnbSet='cur';
-function lnbPoint(k){ const s=LNB_SETS[k]||LNB_SETS.cur; SLIDE_DATA.apps=s.apps; SLIDE_DATA.shortcuts=s.shortcuts; state.lnbSet=LNB_SETS[k]?k:'cur'; }
-function lnbView(k){ lnbPoint(k); render(); }
-function lnbFmt(v){ return String(v||'').replace('T',' ').slice(0,16); }
-function lnbRsvModal(){
-  const r=LNB_SETS.rsv, def=r?r.at.replace(' ','T'):(function(){ const d=new Date(Date.now()+7*864e5); return d.toISOString().slice(0,10)+'T00:00'; })();
-  document.getElementById('modalroot').innerHTML=`<div class="modal-dim" onclick="closeAppMenuModal()"><div class="modal lnbm" onclick="event.stopPropagation()" role="dialog" aria-label="예약 세트">
-    <div class="modal-hd"><b>${r?'적용일 변경':'예약 세트 만들기'}</b><span class="modal-x" onclick="closeAppMenuModal()">&#10005;</span></div>
-    <div class="modal-body">
-      ${r?'':'<p class="lnbm-p">지금 적용 중인 앱 메뉴와 서비스 바로가기를 그대로 복사해 예약 세트를 만듭니다. 만든 뒤 바꿀 항목만 수정하세요.</p>'}
-      <div class="ff"><label for="lnb-at">적용 시작일시 <span class="req">&#9679;</span></label><input id="lnb-at" type="datetime-local" value="${def}"><div class="field-err" id="lnb-at-err"></div></div>
-      <p class="lnbm-n">이 시각이 되면 예약 세트가 자동으로 적용되고, 지금 구성은 종료됩니다.</p>
-    </div>
-    <div class="modal-ft"><button class="btn btn-ghost" onclick="closeAppMenuModal()">취소</button><button class="btn btn-primary" onclick="lnbRsvSave()">${r?'변경':'만들기'}</button></div></div></div>`;
-}
-function lnbRsvSave(){
-  const v=(document.getElementById('lnb-at')||{}).value||'', err=document.getElementById('lnb-at-err');
-  if(!v){ err.textContent='적용 시작일시를 입력해 주세요.'; return; }
-  if(new Date(v)<=new Date()){ err.textContent='지금 이후의 일시를 입력해 주세요.'; return; }
-  const at=lnbFmt(v), r=LNB_SETS.rsv;
-  if(r){ const b=r.at; r.at=at; AUTH_LOGS.unshift([nowStr(),curName(),navPath('content-lnb'),'수정','LNB 예약 세트 적용일 변경 ('+b+' → '+at+')']); closeAppMenuModal(); lnbView('rsv'); showToast('적용일을 '+at+'로 바꿨습니다.'); return; }
-  const cp=function(a){ return JSON.parse(JSON.stringify(a)); };
-  LNB_SETS.rsv={apps:cp(LNB_SETS.cur.apps),shortcuts:cp(LNB_SETS.cur.shortcuts),at:at};
-  AUTH_LOGS.unshift([nowStr(),curName(),navPath('content-lnb'),'등록','LNB 예약 세트 등록 (적용 시작 '+at+')']);
-  closeAppMenuModal(); lnbView('rsv'); showToast('예약 세트를 만들었습니다. 바꿀 항목을 수정하세요.');
-}
-function lnbRsvCancel(){
-  askConfirm('예약을 취소할까요?','예약 세트에서 수정한 내용은 적용되지 않고, 지금 구성이 계속 유지됩니다.','예약 취소',function(){
-    const at=LNB_SETS.rsv&&LNB_SETS.rsv.at; LNB_SETS.rsv=null; lnbPoint('cur');
-    AUTH_LOGS.unshift([nowStr(),curName(),navPath('content-lnb'),'삭제','LNB 예약 세트 취소 (적용 예정 '+at+')']);
-    render(); showToast('예약을 취소했습니다.');
-  },{danger:true});
-}
-function lnbDiff(){
-  const r=LNB_SETS.rsv; if(!r) return 0; const c=LNB_SETS.cur, key=function(a){ return JSON.stringify(a); };
-  let n=0; const cmp=function(A,B){ const m=Math.max(A.length,B.length); for(let i=0;i<m;i++){ if(key(A[i])!==key(B[i])) n++; } };
-  cmp(c.apps,r.apps); cmp(c.shortcuts,r.shortcuts); return n;
-}
-function lnbSetBar(){
-  const r=LNB_SETS.rsv, v=state.lnbSet;
-  const tabs=`<div class="seg3 ltabs" role="radiogroup" aria-label="세트">
-    <label class="${v==='cur'?'on':''}" onclick="lnbView('cur')"><i class="lnb-dot ing"></i>적용 중</label>
-    ${r?`<label class="${v==='rsv'?'on':''}" onclick="lnbView('rsv')"><i class="lnb-dot pre"></i>예약 · ${r.at} 적용</label>`:''}</div>`;
-  const right=r?'':`<button class="btn-line" onclick="lnbRsvModal()">+ 예약 세트 만들기</button>`;
-  const note=v==='rsv'
-    ?`<div class="lnb-note rsv"><div><b>${r.at}</b>에 이 구성으로 자동 교체됩니다.<span>현재 대비 변경 ${lnbDiff()}건</span></div><div class="lnb-note-b"><button class="btn-line" onclick="lnbRsvModal()">적용일 변경</button><button class="btn-line danger" onclick="lnbRsvCancel()">예약 취소</button></div></div>`
-    :`<div class="lnb-note"><div>지금 앱에 보이는 구성입니다. <span>${LNB_SETS.cur.since}부터 적용 중</span></div>${r?`<div class="lnb-note-s">${r.at}에 예약 세트로 교체 예정</div>`:''}</div>`;
-  return `<div class="lnb-set"><div class="lnb-set-h">${tabs}${right}</div>${note}</div>`;
-}
-const _lnbPage49=lnbPage;
-lnbPage=function(){ lnbPoint(state.lnbSet); return lnbSetBar()+_lnbPage49(); };
-SCREENS['content-lnb'].render=lnbPage;
-PAGE_TIP['content-lnb']='앱 메뉴(LNB 상단)와 서비스 바로가기(LNB 하단)를 관리합니다. 구성을 특정 일시에 바꾸려면 [예약 세트 만들기]로 미리 만들어 두면, 그 시각에 자동으로 교체됩니다.';
-/* 다른 메뉴로 나가면 적용 중 세트로 되돌림 */
-const _r49=render;
-render=function(){ if(state.menu!=='content-lnb'&&state.lnbSet!=='cur') lnbPoint('cur'); return _r49.apply(this,arguments); };
-/* 예약 세트를 수정한 이력은 구분해서 남김 */
-const _sf49=saveForm;
-saveForm=function(){ const n=AUTH_LOGS.length, set=state.lnbSet; const x=_sf49.apply(this,arguments); if(set==='rsv'&&AUTH_LOGS.length>n&&AUTH_LOGS[0]&&String(AUTH_LOGS[0][4]).indexOf('예약 세트')<0) AUTH_LOGS[0][4]='[예약 세트] '+AUTH_LOGS[0][4]; return x; };
-render();
-/* =====================================================================
    v50 · v6 UX 개선
    1) IA: 홈(대시보드) 신규 · 장애 모드를 '시스템 관리'로 분리 · LNB 명칭 개선
    2) 권한 없는 메뉴는 사이드바에서 숨김(직접 접근 시 기존 차단 화면 유지)
@@ -8585,16 +8542,16 @@ render();
   const it=function(k,label){ const i=pick(k)||{key:k,label:label}; if(label) i.label=label; return i; };
   const N=[
     {sec:'성장판 학습관리',items:[it('product-main'),it('survey-main')]},
-    {sec:'콘텐츠 노출 관리',items:[it('content-banner'),it('content-notice'),it('content-badge'),it('content-lnb','앱 메뉴(LNB) 관리')]},
+    {sec:'콘텐츠 노출 관리',items:[it('content-banner'),it('content-notice'),it('content-badge'),it('content-lnb','앱 메뉴 관리')]},
     {sec:'앱 운영 관리',items:[it('app-ops'),it('app-digital'),it('app-voc')]},
     {sec:'시스템 관리',sys:true,items:[it('app-emergency'),it('auth-perm'),it('auth-log')]}
   ];
   NAV.splice(0,NAV.length); N.forEach(function(g){ NAV.push(g); });
-  if(SCREENS['content-lnb']) SCREENS['content-lnb'].title='앱 메뉴(LNB) 관리';
+  if(SCREENS['content-lnb']) SCREENS['content-lnb'].title='앱 메뉴 관리';
 })();
 /* 이전 경로로 남은 이력 정리 */
-const LOG_PATH_MAP=[[/^앱 운영 관리 › 장애 모드 관리/,'시스템 관리 › 장애 모드 관리'],[/^계정\/권한 관리 › /,'시스템 관리 › '],[/LNB 관리$/,'앱 메뉴(LNB) 관리']];
-normalizeLogs=(function(f){ return function(){ f(); AUTH_LOGS.forEach(function(r){ const b=r[2]; LOG_PATH_MAP.forEach(function(m){ r[2]=String(r[2]).replace(m[0],m[1]); }); if(b!==r[2]) delete r._m; }); }; })(normalizeLogs);
+const LOG_PATH_MAP=[[/^(연동 상품\/서비스|연동 상품) › 서비스 바로가기$/,'콘텐츠 노출 관리 › 앱 메뉴 관리'],[/^앱 운영 관리 › 장애 모드 관리/,'시스템 관리 › 장애 모드 관리'],[/^계정\/권한 관리 › /,'시스템 관리 › '],[/(LNB 관리|앱 메뉴\(LNB\) 관리|LNB 앱 메뉴관리)$/,'앱 메뉴 관리']];
+normalizeLogs=(function(f){ return function(){ f(); AUTH_LOGS.forEach(function(r){ const b=r[2]; LOG_PATH_MAP.forEach(function(m){ r[2]=String(r[2]).replace(m[0],m[1]); }); if(/^(\[예약 세트\] )?(서비스 바로가기|LNB 앱 메뉴)/.test(String(r[4]))) r[2]=navPath('content-lnb'); if(b!==r[2]) delete r._m; }); }; })(normalizeLogs);
 normalizeLogs();
 const _lgDraw50=lgDraw;
 lgDraw=function(){ _lgDraw50.apply(this,arguments); const c=document.querySelector('.lgm-crumb'); if(c) c.textContent=navPath('auth-log'); };
@@ -8818,7 +8775,7 @@ const _scf54=scFormHtml;
 scFormHtml=function(){
   const h=_scf54.apply(this,arguments), isNew=!state.ctx.id, s=isNew?{per:{mode:'always'}}:(lnbFind('sc',state.ctx.id)||{}), p=scPer(s), rng=p.mode==='range';
   const row=fieldRow('노출 기간',true,`<div class="radio-row">${radioIn('f-sc-per','always',!rng,'상시 노출','onchange="scPerMode(this.value)"')}${radioIn('f-sc-per','range',rng,'기간 노출','onchange="scPerMode(this.value)"')}</div>
-    <div id="sc-per-range" class="sc-per ${rng?'':'hidden-field'}">${dateRange('f-sc-per',p.s||'',p.e||'',false,true,'노출 기간')}<div class="fhint">기간이 끝나면 LNB에서 자동으로 빠집니다. 노출을 끄면 기간과 관계없이 숨겨집니다.</div></div>`);
+    <div id="sc-per-range" class="sc-per ${rng?'':'hidden-field'}">${dateRange('f-sc-per',p.s||'',p.e||'',false,true,'노출 기간')}<div class="fhint">기간이 끝나면 앱 메뉴에서 자동으로 빠집니다. 노출을 끄면 기간과 관계없이 숨겨집니다.</div></div>`);
   let out=h.replace('<div class="frow"><div class="flabel">링크 방식',row+'<div class="frow"><div class="flabel">링크 방식');
   if(!isNew){ const st=scState(s); out=out.replace(/<div class="stat-line"><span class="chip [^"]*">[^<]*<\/span>/,'<div class="stat-line"><span class="chip '+st.c+'">'+st.t+'</span><span class="sl-sep">·</span><span>'+scPerText(s)+'</span>'); }
   return out;
@@ -8856,8 +8813,9 @@ function scListFix(){
   });
 }
 const _r54=render;
-render=function(){ const x=_r54.apply(this,arguments); try{ scListFix(); }catch(e){ console.error(e); } return x; };
-TIPS['노출 기간']='상시 노출은 노출을 켜 둔 동안 계속 보입니다. 기간 노출은 시작일부터 종료일까지만 LNB에 보이고, 기간이 끝나면 자동으로 빠집니다.';
+render=function(){ const x=_r54.apply(this,arguments); try{ document.querySelectorAll('#main .lnb-blk-h span').forEach(function(sp){ sp.textContent=sp.textContent.replace('LNB 상단 아이콘','상단 메뉴 아이콘').replace('LNB 하단 외부 링크','하단 외부 서비스 링크'); }); scListFix(); }catch(e){ console.error(e); } return x; };
+TIPS['노출 기간']='상시 노출은 노출을 켜 둔 동안 계속 보입니다. 기간 노출은 시작일부터 종료일까지만 앱 메뉴에 보이고, 기간이 끝나면 자동으로 빠집니다.';
+PAGE_TIP['content-lnb']='앱 상단 메뉴와 하단 서비스 바로가기를 관리합니다. 서비스 바로가기는 상시 노출 또는 기간 노출을 고를 수 있습니다.';
 render();
 /* =====================================================================
    v55 · 신규 상품 등록 ③: 등록 화면 대신 '신규 상품 목록 반영'
@@ -8959,6 +8917,381 @@ persistProduct=function(){
 };
 Object.keys(EDIT_ROUTES).forEach(function(k){ if(EDIT_ROUTES[k].kind==='product') EDIT_ROUTES[k].persist=persistProduct; });
 TIPS['학습 연결']='앱에서 상품의 [학습하기]를 누르면 열리는 학습입니다. 개인화링크는 서비스명·버튼명·타겟 도메인·개인화 API URL을 직접 입력합니다.';
+render();
+/* =====================================================================
+   v57
+   1) 상품 관리: 동기화 버튼 1개(상품 DB + 상품과정 DB) · 신규 상품은 '미사용'으로 목록에 자동 추가
+   2) 설문 관리: 종류 관리·복제 제거, 서책 이해도체크 · 자기점검(전과목 공통)만 유지
+   3) 드림스 상품 매핑 '구분' 열 삭제
+   4) CMS 콘텐츠: 학습관 사용여부 Y/N · 과정세트 없는 서책 Y/N
+   ===================================================================== */
+/* ---- 1) 동기화 1개 ---- */
+productSteps=function(){
+  const can=canDo('product-main','u'), at=[SYNC_AT.product,SYNC_AT.course].sort().pop()||'';
+  return `<section class="pm-flow pm-sync1" aria-label="드림스 동기화">
+    <div class="pms-tx"><b>드림스 DB 동기화</b><span>상품 ${SYNC.product}차 · 상품과정 ${SYNC.course}차 · 마지막 ${at.slice(0,16)}</span></div>
+    <span class="pms-n">새로 들어온 상품은 <b>미사용</b> 상태로 목록에 추가됩니다.</span>
+    <button type="button" class="btn btn-primary" ${can?'':'disabled'} onclick="syncAll()">&#8635; 동기화</button>
+  </section>`;
+};
+function syncAll(){
+  if(!guard('product-main','u')) return;
+  askConfirm('드림스 동기화를 실행할까요?','상품 DB → 상품과정 DB 순서로 한 번에 동기화합니다. 새로 들어온 상품은 미사용 상태로 목록에 추가됩니다.','동기화',function(){
+    runSync('product'); runSync('course');
+    const added=DREAMS_NEW.splice(0,DREAMS_NEW.length), base=growthProducts.rows.length;
+    added.map(function(p,i){ return [p,i]; }).reverse().forEach(function(x){ const p=x[0];
+      const row={ord:base+x[1]+1,code:p.code,name:p.name,type:p.type,subject:p.subject,cnt:p.cnt,period:TODAY+' ~ 2099-12-31',editKey:'prod_'+p.code,isNew:true,
+        ext:{media:p.type==='서책'?'book':'digital',links:[{type:p.type==='서책'?'cms':'app'}],growth:false,use:false,survey:null}};
+      growthProducts.rows.unshift(row); growthProducts.total++;
+      registerProductRoute(row.editKey); EDIT_ROUTES[row.editKey].persist=persistProduct; });
+    if(added.length) AUTH_LOGS.unshift([nowStr(),curName(),navPath('product-main'),'등록','동기화로 신규 상품 '+added.length+'건 추가 · 미사용 ('+added.map(function(p){ return p.code; }).join(', ')+')']);
+    if(added.length) state.prod.growth='N';
+    render();
+    setTimeout(function(){ showToast(added.length?'동기화를 마쳤습니다. 신규 상품 '+added.length+'건이 미사용 목록에 추가되었습니다.':'동기화를 마쳤습니다. 새로 들어온 상품은 없습니다.'); },50);
+  },{okClass:'btn-primary'});
+}
+syncNewProducts=function(){ syncAll(); };
+
+/* ---- 2) 설문 관리 정리 ---- */
+(function(){
+  for(let i=SURVEYS.length-1;i>=0;i--){ if(['SV-001','SV-004'].indexOf(SURVEYS[i].id)<0) SURVEYS.splice(i,1); }
+  SV_KINDS.splice(0,SV_KINDS.length,'이해도 체크','자기점검');
+  if(SV_KIND_META['자기점검']) SV_KIND_META['자기점검'].scope='all';
+})();
+svKindOpen=function(){};
+svCopy=function(){};
+const _svl57=surveyList;
+surveyList=function(){
+  return _svl57.apply(this,arguments)
+    .replace(/<button class="btn-line" onclick="svKindOpen\(\)">종류 관리<\/button>/,'')
+    .replace(/<td><button class="btn-line" onclick="svCopy\('[^']*'\)">복제<\/button><\/td>/g,'')
+    .replace('<th style="width:72px"></th>','')
+    .replace(/전체 상품 공통/g,'전과목 공통');
+};
+SCREENS['survey-main'].render=surveyList;
+const _svfh57=svFormHtml;
+svFormHtml=function(){ return _svfh57.apply(this,arguments).replace(/전체 상품 공통 설문입니다\./,'전과목 공통 설문입니다.').replace('모든 상품에 적용됩니다','모든 과목(상품)에 적용됩니다'); };
+EDIT_ROUTES.svEdit.render=svFormHtml; EDIT_ROUTES.regSurvey.render=svFormHtml;
+const _svs57=surveySection;
+surveySection=function(r){ return _svs57.apply(this,arguments).replace(/전체 상품 공통/g,'전과목 공통').replace('전체 상품 공통 설문은','전과목 공통 설문은'); };
+PAGE_TIP['survey-main']='서책 이해도체크는 상품마다 연결하고, 자기점검은 전과목 공통으로 모든 상품에 적용됩니다. 설문을 고치면 연결된 상품에 같이 반영됩니다.';
+
+/* ---- 3) 드림스 상품 매핑 '구분' 열 삭제 · 4) CMS 학습관/과정세트 Y·N ---- */
+const _pfh57=productFormHtml;
+productFormHtml=function(key){
+  const r=productRowByKey(key)||growthProducts.rows[0], e=r.ext||{};
+  let h=_pfh57.apply(this,arguments);
+  h=h.replace(/(<table class="gt pf-map-t">[\s\S]*?<\/table>)/,function(t){
+    return t.replace(/<th style="width:120px">구분<\/th>/,'').replace(/<td><span class="chip st-end">[^<]*<\/span><\/td>/g,'').replace('colspan="4"','colspan="3"');
+  });
+  const yn=function(name,on){ return `<div class="radio-row">${radioIn(name,'Y',on,'Y')}${radioIn(name,'N',!on,'N')}</div>`; };
+  const L=(typeof lkScList==='function')?lkScList():SLIDE_DATA.shortcuts, cur=e.hallLink||((L.find(function(x){ return /서책 학습/.test(x.name); })||{}).id)||'';
+  const cmsOpt=`<div class="lk-cms-opt pf-grid2">
+    ${fieldRow('학습관 사용여부',true,`<div class="radio-row">${radioIn('f-cms-hall','Y',!!e.study,'Y','onchange="cmsHall(this.value)"')}${radioIn('f-cms-hall','N',!e.study,'N','onchange="cmsHall(this.value)"')}</div>`)}
+    <div id="cms-hall-link" class="${e.study?'':'hidden-field'}">${fieldRow('학습관 링크',true,`<select id="f-cms-hall-sc" class="ddl" data-req data-label="학습관 링크" onchange="markDirty()"><option value="">개인화링크 선택</option>${L.map(function(x){ return `<option value="${x.id}" ${x.id===cur?'selected':''}>${esc(x.name)}${x.show===false?' (LNB 미노출)':''}</option>`; }).join('')}</select><div class="fhint">앱 메뉴 관리 › 서비스 바로가기에 등록된 링크입니다.</div>`)}</div>
+  </div>`;
+  h=h.replace(/(<div class="lk-pane" data-t="cms">)/,'$1'+cmsOpt);
+  return h;
+};
+const _pp57=persistProduct;
+persistProduct=function(){
+  const v=function(n){ const x=document.querySelector('input[name="'+n+'"]:checked'); return x?x.value:null; };
+  const mt=document.getElementById('lk-wrap')?lkVal('f-lk-main-type'):null, cms=mt==='cms'||mt==='nocourse', hall=v(mt==='nocourse'?'f-nc-hall':'f-cms-hall');
+  const hallSc=(document.getElementById('f-cms-hall-sc')||{}).value||null;
+  const key=state.editKey, msg=_pp57.apply(this,arguments), r=productRowByKey(key);
+  if(r&&r.ext) r.ext.noCourse=(mt==='nocourse');
+  if(cms&&r&&r.ext){ r.ext.study=hall==='Y'; r.ext.hallLink=(mt==='cms'&&hall==='Y')?hallSc:null;
+    for(let i=0;i<Math.min(3,AUTH_LOGS.length);i++){ if(/\(학습 연결: /.test(AUTH_LOGS[i][4])){ AUTH_LOGS[i][4]=String(AUTH_LOGS[i][4]).replace(/\(학습 연결: [^)]*\)/,'(학습 연결: '+(mt==='nocourse'?'과정/세트 없는 서책':'과정/세트 있는 서책(CMS)')+' · 학습관 '+(r.ext.study?'Y':'N')+')'); break; } } }
+  return msg;
+};
+Object.keys(EDIT_ROUTES).forEach(function(k){ if(EDIT_ROUTES[k].kind==='product') EDIT_ROUTES[k].persist=persistProduct; });
+function cmsHall(v){ const b=document.getElementById('cms-hall-link'); if(b) b.classList.toggle('hidden-field',v!=='Y'); markDirty(); }
+TIPS['학습관 링크']='Y이면 학습 화면에 이 학습관 링크(바로가기)가 함께 제공됩니다. 링크는 앱 메뉴 관리의 서비스 바로가기에서 등록·수정합니다.';
+TIPS['학습관 사용여부']='Y로 두면 이 서책 상품의 학습 화면에 마카다미아 학습관 연결이 함께 제공됩니다.';
+TIPS['_unused_']='드림스에 과정·세트 정보가 없는 서책 상품이면 Y로 둡니다. Y이면 진도(과정·세트) 화면 대신 바로가기 방식으로 안내합니다.';
+render();
+/* =====================================================================
+   v58 · 학습 연결 유형 정리
+   - 과정/세트 있는 서책(CMS 콘텐츠) · 과정/세트 없는 서책 · 앱 · 웹뷰 · 개인화링크
+   - 개인화링크: 앱 메뉴 관리 › 서비스 바로가기에 등록한 링크 중에서 선택
+   ===================================================================== */
+(function(){
+  const c=LK_TYPES.find(function(t){ return t.k==='cms'; }); if(c){ c.t='과정/세트 있는 서책'; c.d='CMS 콘텐츠 · BI · 리소스 JSON'; }
+  if(!LK_TYPES.some(function(t){ return t.k==='nocourse'; })) LK_TYPES.splice(1,0,{k:'nocourse',t:'과정/세트 없는 서책',d:'과정·세트 없이 바로 학습',media:['book','digital']});
+  const p=LK_TYPES.find(function(t){ return t.k==='plink'; }); if(p) p.d='서비스 바로가기에서 선택';
+})();
+function ncHall(v){ const b=document.getElementById('nc-hall-link'); if(b) b.classList.toggle('hidden-field',v!=='Y'); markDirty(); }
+lkMediaOf=function(type,r){ if(type==='cms'||type==='nocourse') return 'book'; if(type==='app'||type==='webview') return 'digital'; return (r&&r.type==='서책')?'book':'digital'; };
+function lkTypeName2(k){ return (LK_TYPES.find(function(t){ return t.k===k; })||{}).t||k; }
+/* 개인화링크: 서비스 바로가기 선택 */
+function lkScList(){ return SLIDE_DATA.shortcuts.filter(function(s){ return s; }); }
+function lkScFind(l){ if(!l||l.type!=='plink') return null; const L=lkScList();
+  return L.find(function(s){ return l.sc&&s.id===l.sc; })||L.find(function(s){ return l.name&&s.name===l.name; })||L.find(function(s){ return l.domain&&(s.domain===l.domain||s.url===l.domain); })||null; }
+function lkScInfo(s){ if(!s) return '<span class="sv-none">바로가기를 고르면 연결 주소가 보입니다.</span>';
+  const addr=s.mode==='s'?s.url:(s.domain+' + '+s.api);
+  return `<span class="chip ${s.mode==='s'?'st-end':'t-list'}">${s.mode==='s'?'단순 링크':'개인화 링크'}</span><code>${esc(addr)}</code>${s.btn?`<span>버튼명 <b>${esc(s.btn)}</b></span>`:''}`; }
+lkPlinkFields=function(role,l){
+  const cur=lkScFind(l), L=lkScList(), legacy=(!cur&&l&&l.type==='plink'&&(l.name||l.svc))?(l.name||((LINK_SVC.find(function(x){ return x.k===l.svc; })||{}).n)||''):'';
+  return `<div class="lk-sc">
+    <div class="lk-sc-row"><select id="f-lk-${role}-sc" class="ddl" data-req data-label="서비스 바로가기" onchange="lkScPick('${role}')"><option value="">서비스 바로가기 선택</option>${L.map(function(s){ return `<option value="${s.id}" ${cur&&cur.id===s.id?'selected':''}>${esc(s.name)}${s.show===false?' (숨김)':''}</option>`; }).join('')}</select>
+      <button type="button" class="btn-line" onclick="go('content-lnb')">앱 메뉴 관리에서 등록</button></div>
+    <div class="lk-sc-info" id="f-lk-${role}-scinfo">${lkScInfo(cur)}</div>
+    ${legacy?`<div class="fhint lk-sc-legacy">기존 연결: <b>${esc(legacy)}</b> — 서비스 바로가기에 없는 링크입니다. 앱 메뉴 관리에서 등록한 뒤 선택해 주세요.</div>`:''}
+  </div>`;
+};
+function lkScPick(role){ const v=(document.getElementById('f-lk-'+role+'-sc')||{}).value, s=lkScList().find(function(x){ return x.id===v; }); const b=document.getElementById('f-lk-'+role+'-scinfo'); if(b) b.innerHTML=lkScInfo(s); lkUpdate(); markDirty(); }
+lkIsMaca=function(){ const v=(document.getElementById('f-lk-main-sc')||{}).value, s=lkScList().find(function(x){ return x.id===v; }); return !!(s&&/마카다미아|macadamia/i.test(s.name+' '+(s.domain||'')+' '+(s.url||''))); };
+/* 과정/세트 없는 서책 영역 */
+const _pfh58=productFormHtml;
+productFormHtml=function(key){
+  const r=productRowByKey(key)||growthProducts.rows[0], e=r.ext||{};
+  let h=_pfh58.apply(this,arguments);
+  const yn=function(name,on){ return `<div class="radio-row">${radioIn(name,'Y',on,'Y')}${radioIn(name,'N',!on,'N')}</div>`; };
+  const Ls=lkScList(), curL=e.hallLink||((Ls.find(function(x){ return /서책 학습/.test(x.name); })||{}).id)||'';
+  const pane=`<div class="lk-pane" data-t="nocourse"><div class="lk-cms-opt pf-grid2">${fieldRow('학습관 사용여부',true,`<div class="radio-row">${radioIn('f-nc-hall','Y',!!e.study,'Y','onchange="ncHall(this.value)"')}${radioIn('f-nc-hall','N',!e.study,'N','onchange="ncHall(this.value)"')}</div>`)}
+    <div id="nc-hall-link" class="${e.study?'':'hidden-field'}">${fieldRow('학습관 링크',true,`<select id="f-nc-hall-sc" class="ddl" data-req data-label="학습관 링크" onchange="markDirty()"><option value="">링크 선택</option>${Ls.map(function(x){ return `<option value="${x.id}" ${x.id===curL?'selected':''}>${esc(x.name)}${x.show===false?' (LNB 미노출)':''}</option>`; }).join('')}</select><div class="fhint">앱 메뉴 관리 › 서비스 바로가기에 등록된 링크입니다.</div>`)}</div></div><div class="fhint">과정·세트 정보 없이, 상품을 누르면 학습 화면(바로가기 방식)으로 바로 연결됩니다.</div></div>`;
+  h=h.replace('<div class="lk-pane" data-t="app">',pane+'<div class="lk-pane" data-t="app">');
+  return h;
+};
+/* 기존 데이터: noCourse=true 이면 '과정/세트 없는 서책'으로 표시 */
+const _lki58=lkInit;
+lkInit=function(r){ const x=_lki58.apply(this,arguments); if(r&&r.ext&&r.ext.noCourse&&x.links[0]&&x.links[0].type==='cms') x.links[0]={type:'nocourse'}; return x; };
+const _pp58=persistProduct;
+persistProduct=function(){
+  const mt=document.getElementById('lk-wrap')?lkVal('f-lk-main-type'):null, scid=(document.getElementById('f-lk-main-sc')||{}).value;
+  const ncSc=(document.getElementById('f-nc-hall-sc')||{}).value||null;
+  const key=state.editKey, msg=_pp58.apply(this,arguments), r=productRowByKey(key);
+  if(r&&r.ext&&mt==='nocourse'){ r.ext.hallLink=r.ext.study?ncSc:null; r.ext.links=[{type:'nocourse'}]; r.ext.platform='nocourse'; r.ext.media='book'; r.ext.learn='book'; }
+  if(r&&r.ext&&mt==='plink'){ const s=lkScList().find(function(x){ return x.id===scid; });
+    if(s){ r.ext.links=[{type:'plink',sc:s.id,name:s.name,btn:s.btn,domain:s.mode==='s'?s.url:s.domain,api:s.mode==='s'?'':s.api}]; r.ext.web2=r.ext.links[0].domain; r.ext.papi=r.ext.links[0].api; }
+    for(let i=0;i<Math.min(3,AUTH_LOGS.length);i++){ if(/\(학습 연결: /.test(AUTH_LOGS[i][4])){ AUTH_LOGS[i][4]=String(AUTH_LOGS[i][4]).replace(/\(학습 연결: [^)]*\)/,'(학습 연결: 개인화링크 · '+(s?s.name:'-')+')'); break; } } }
+  if(r&&mt&&mt!=='plink'&&mt!=='cms'&&mt!=='nocourse'){ for(let i=0;i<Math.min(3,AUTH_LOGS.length);i++){ if(/\(학습 연결: /.test(AUTH_LOGS[i][4])){ AUTH_LOGS[i][4]=String(AUTH_LOGS[i][4]).replace(/\(학습 연결: [^)]*\)/,'(학습 연결: '+lkTypeName2(mt)+')'); break; } } }
+  return msg;
+};
+Object.keys(EDIT_ROUTES).forEach(function(k){ if(EDIT_ROUTES[k].kind==='product') EDIT_ROUTES[k].persist=persistProduct; });
+TIPS['학습 연결']='과정/세트 있는 서책: CMS 콘텐츠(BI·리소스 JSON)로 학습 · 과정/세트 없는 서책: 바로 학습 화면으로 연결 · 앱/웹뷰: 디지털 상품 실행 · 개인화링크: 앱 메뉴 관리의 서비스 바로가기 중에서 선택';
+render();
+/* =====================================================================
+   v59
+   1) 이벤트 유형: 직접 입력 + 유형 관리(추가·사용여부·삭제)
+   2) 서비스 바로가기: 주소(URL) 변경 예약
+   3) 변경 이력: 권한 변경 로그는 원본 JSON 미표시
+   4) 마카다미아 학습관(서책 학습) 링크 등록 (상품 학습관 링크용, LNB 미노출)
+   5) 상품 설문: '연결 안 함' 제외
+   ===================================================================== */
+/* ---- 4) 서책 학습관 링크 ---- */
+(function(){
+  if(!SLIDE_DATA.shortcuts.some(function(s){ return s.id==='scMacaBook'; }))
+    SLIDE_DATA.shortcuts.push({id:'scMacaBook',name:'마카다미아 학습관(서책 학습)',mode:'p',url:'',domain:'https://macadamia.daekyo.com/learning/library',api:'/v1/external/maca-study-hall/library',btn:'마카다미아 학습관(학습서) 바로가기',show:false,updated:'2026-11-05 10:00',per:{mode:'always'}});
+})();
+
+/* ---- 1) 이벤트 유형 ---- */
+Object.keys(EV_TYPES).forEach(function(k){ if(EV_TYPES[k].use===undefined) EV_TYPES[k].use=true; });
+function evTypeKeysOn(cur){ return Object.keys(EV_TYPES).filter(function(k){ return !EV_TYPES[k].deleted&&(EV_TYPES[k].use||k===cur); }); }
+function evTypeCount(k){ return badgeEvents.rows.filter(function(r){ return (r.type||'attend')===k; }).length; }
+function evSegHtml(cur){
+  return `<div class="seg3 ev-type" role="radiogroup" aria-label="이벤트 유형">${evTypeKeysOn(cur).map(function(k){ return `<label class="${cur===k?'on':''}"><input type="radio" name="f-evtype" value="${k}" ${cur===k?'checked':''} onchange="evType(this.value)">${esc(EV_TYPES[k].t)}</label>`; }).join('')}<label class="ev-custom-l"><input type="radio" name="f-evtype" value="__custom" onchange="evType(this.value)">+ 직접 입력</label></div>
+  <div id="ev-custom" class="ev-custom hidden-field"><input id="f-evtype-name" type="text" maxlength="10" placeholder="새 유형 이름 (10자 이내, 예: 퀴즈 이벤트)" data-req data-label="이벤트 유형"><span class="fhint" style="margin:0">저장하면 유형 목록에 추가됩니다. 획득 조건은 직접 입력합니다.</span></div>`;
+}
+const _efh59=eventFormHtml;
+eventFormHtml=function(key){
+  const h=_efh59.apply(this,arguments);
+  return h.replace(/<div class="seg3 ev-type"[\s\S]*?<\/div>/,evSegHtml(state.evType||'attend'));
+};
+const _evType59=evType;
+evType=function(v){
+  const box=document.getElementById('ev-custom');
+  if(v==='__custom'){
+    _evType59('etc');
+    document.querySelectorAll('.ev-type label').forEach(function(l){ l.classList.toggle('on',l.querySelector('input').value==='__custom'); });
+    const c=document.querySelector('input[name="f-evtype"][value="__custom"]'); if(c) c.checked=true;
+    if(box){ box.classList.remove('hidden-field'); const i=document.getElementById('f-evtype-name'); if(i) i.focus(); }
+    return;
+  }
+  if(box) box.classList.add('hidden-field');
+  return _evType59(v);
+};
+const _etOf59=evTypeOf;
+evTypeOf=function(){ const c=document.querySelector('input[name="f-evtype"]:checked'); if(c&&c.value==='__custom') return 'etc'; return _etOf59(); };
+const _pn59=persistNotice;
+persistNotice=function(){
+  const c=document.querySelector('input[name="f-evtype"]:checked'), isCustom=c&&c.value==='__custom', nm=((document.getElementById('f-evtype-name')||{}).value||'').trim();
+  const key=state.editKey, m=_pn59.apply(this,arguments);
+  if(isCustom&&nm){
+    let k=Object.keys(EV_TYPES).find(function(x){ return EV_TYPES[x].t===nm&&!EV_TYPES[x].deleted; });
+    if(!k){ k='ev'+Date.now().toString(36); EV_TYPES[k]={t:nm,pre:'',unit:'',use:true}; AUTH_LOGS.unshift([nowStr(),curName(),navPath('content-badge'),'등록','이벤트 유형 "'+nm+'" 등록 (직접 입력)']); }
+    const r=(key==='regNotice')?badgeEvents.rows[0]:badgeEvents.rows.find(function(x){ return x.id===key; }); if(r) r.type=k;
+  }
+  return m;
+};
+Object.keys(EDIT_ROUTES).forEach(function(k){ const r=EDIT_ROUTES[k]; if(r.persist===_pn59) r.persist=persistNotice; });
+/* 유형 관리 모달 */
+function evTypeOpen(){
+  const rows=Object.keys(EV_TYPES).filter(function(k){ return !EV_TYPES[k].deleted; }).map(function(k){ const T=EV_TYPES[k], n=evTypeCount(k);
+    return `<tr><td><b>${esc(T.t)}</b></td><td>${T.pre?esc(T.pre)+' N'+esc(T.unit):'직접 입력'}</td><td class="svk-n">${n}개</td>
+      <td><label class="svk-sw"><input type="checkbox" ${T.use?'checked':''} onchange="evTypeUse('${k}',this.checked)"> ${T.use?'사용':'미사용'}</label></td>
+      <td>${(n||k==='attend')?'<span class="svk-lock" title="이벤트가 있거나 기본 유형이라 삭제할 수 없습니다. 미사용으로 바꾸세요.">삭제 불가</span>':`<button class="btn-line danger" onclick="evTypeDel('${k}')">삭제</button>`}</td></tr>`; }).join('');
+  document.getElementById('modalroot').innerHTML=`<div class="modal-dim" onclick="closeAppMenuModal()"><div class="modal wide svk" onclick="event.stopPropagation()" role="dialog" aria-label="이벤트 유형 관리">
+    <div class="modal-hd"><b>이벤트 유형 관리</b><span class="modal-x" onclick="closeAppMenuModal()">&#10005;</span></div>
+    <div class="modal-body">
+      <table class="gt svk-t"><thead><tr><th>유형명</th><th style="width:170px">배지 획득 조건</th><th style="width:70px">이벤트</th><th style="width:100px">사용여부</th><th style="width:90px"></th></tr></thead><tbody>${rows}</tbody></table>
+      <div class="svk-add"><b>새 유형 추가</b>
+        <input id="evt-name" type="text" maxlength="10" placeholder="유형명 (10자 이내)">
+        <select id="evt-mode" class="ddl" onchange="document.getElementById('evt-num').classList.toggle('hidden-field',this.value!=='num')"><option value="text">조건 직접 입력</option><option value="num">숫자 조건 (N회·N일)</option></select>
+        <span id="evt-num" class="evt-num hidden-field"><input id="evt-pre" type="text" maxlength="10" placeholder="조건 문구 (예: 퀴즈 정답)"><input id="evt-unit" type="text" maxlength="3" placeholder="단위 (예: 개)"></span>
+        <button class="btn btn-primary" onclick="evTypeAdd()">추가</button></div>
+      <div class="field-err" id="evt-err"></div>
+      <p class="fhint" style="margin:8px 0 0">미사용 유형은 새 이벤트를 만들 때 고를 수 없습니다. 이미 등록된 이벤트는 그대로 유지됩니다.</p>
+    </div>
+    <div class="modal-ft"><button class="btn btn-primary" onclick="closeAppMenuModal()">닫기</button></div></div></div>`;
+}
+function evTypeAdd(){
+  const g=function(id){ return ((document.getElementById(id)||{}).value||'').trim(); }, n=g('evt-name'), err=document.getElementById('evt-err'), num=g('evt-mode')==='num';
+  if(!n){ err.textContent='유형명을 입력해 주세요.'; return; }
+  if(Object.keys(EV_TYPES).some(function(k){ return EV_TYPES[k].t===n&&!EV_TYPES[k].deleted; })){ err.textContent='이미 있는 유형명입니다.'; return; }
+  if(num&&!g('evt-pre')){ err.textContent='숫자 조건은 조건 문구를 입력해 주세요.'; return; }
+  const k='ev'+Date.now().toString(36); EV_TYPES[k]={t:n,pre:num?g('evt-pre'):'',unit:num?(g('evt-unit')||'회'):'',use:true};
+  AUTH_LOGS.unshift([nowStr(),curName(),navPath('content-badge'),'등록','이벤트 유형 "'+n+'" 등록']);
+  render(); evTypeOpen(); showToast('"'+n+'" 유형을 추가했습니다.');
+}
+function evTypeUse(k,on){ EV_TYPES[k].use=on; AUTH_LOGS.unshift([nowStr(),curName(),navPath('content-badge'),'수정','이벤트 유형 "'+EV_TYPES[k].t+'" '+(on?'사용':'미사용')+'으로 변경']); render(); evTypeOpen(); }
+function evTypeDel(k){
+  if(evTypeCount(k)){ showToast('이벤트가 있는 유형은 삭제할 수 없습니다.'); return; }
+  askConfirm('"'+EV_TYPES[k].t+'" 유형을 삭제할까요?','목록과 선택지에서 사라지며, 변경 이력에는 남습니다.','삭제',function(){ EV_TYPES[k].deleted=true; EV_TYPES[k].use=false; AUTH_LOGS.unshift([nowStr(),curName(),navPath('content-badge'),'삭제','이벤트 유형 "'+EV_TYPES[k].t+'" 삭제']); render(); evTypeOpen(); });
+}
+/* ---- 2) 서비스 바로가기 주소 변경 예약 ---- */
+function scRsvToggle(on){ const b=document.getElementById('sc-rsv-box'); if(b) b.classList.toggle('hidden-field',!on); markDirty(); }
+function scRsvHtml(s,isNew){
+  if(isNew) return '';
+  const r=s.urlRsv, on=!!r, p=s.mode!=='s', def=(function(){ const d=new Date(Date.now()+7*864e5); return d.toISOString().slice(0,10)+'T00:00'; })();
+  return fieldRow('주소 변경 예약',false,`<label class="chk"><input type="checkbox" id="f-sc-rsv" ${on?'checked':''} onchange="scRsvToggle(this.checked)"> 정해진 시각에 연결 주소를 바꿉니다</label>
+    <div id="sc-rsv-box" class="sc-rsv ${on?'':'hidden-field'}">
+      <label><span>적용 일시</span><input id="f-sc-rsv-at" type="text" maxlength="16" value="${r?r.at:def.replace('T',' ')}" placeholder="YYYY-MM-DD HH:mm"></label>
+      ${p?`<label><span>새 타겟 도메인</span><input id="f-sc-rsv-domain" type="text" value="${esc(r?r.domain||'':'')}" placeholder="https://"></label><label><span>새 개인화 API URL</span><input id="f-sc-rsv-api" type="text" value="${esc(r?r.api||'':'')}" placeholder="/v1/external/..."></label>`
+        :`<label class="w2"><span>새 링크 URL</span><input id="f-sc-rsv-url" type="text" value="${esc(r?r.url||'':'')}" placeholder="https://"></label>`}
+      <div class="fhint">적용 일시 전까지는 지금 주소로 연결되고, 그 시각부터 새 주소로 바뀝니다. 비워 둔 칸은 지금 값을 그대로 씁니다.</div>
+    </div>`);
+}
+const _scf59=scFormHtml;
+scFormHtml=function(){
+  const h=_scf59.apply(this,arguments), isNew=!state.ctx.id, s=isNew?{}:(lnbFind('sc',state.ctx.id)||{});
+  let out=h.replace('<div class="frow"><div class="flabel">바로가기 버튼명',scRsvHtml(s,isNew)+'<div class="frow"><div class="flabel">바로가기 버튼명');
+  if(!isNew&&s.urlRsv) out=out.replace(/(<div class="stat-line">)/,'$1<span class="chip st-before">주소 변경 예약 · '+s.urlRsv.at.slice(5,16)+'</span><span class="sl-sep">·</span>');
+  return out;
+};
+EDIT_ROUTES.scEdit.render=scFormHtml; EDIT_ROUTES.regSc.render=scFormHtml;
+const _sf59=saveForm;
+saveForm=function(){
+  if(state.mode==='edit'&&state.editKey==='scEdit'&&(document.getElementById('f-sc-rsv')||{}).checked){
+    const g=function(id){ return ((document.getElementById(id)||{}).value||'').trim(); }, at=g('f-sc-rsv-at');
+    if(!/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}$/.test(at)){ showToast('적용 일시는 YYYY-MM-DD HH:mm 형식으로 입력해 주세요.'); return; }
+    if(new Date(at.replace(' ','T'))<=new Date()){ showToast('주소 변경 적용 일시는 지금 이후로 입력해 주세요.'); return; }
+    const u=g('f-sc-rsv-url'), d=g('f-sc-rsv-domain'), a=g('f-sc-rsv-api');
+    if(!u&&!d&&!a){ showToast('바꿀 새 주소를 입력해 주세요.'); return; }
+    if((u&&!/^https?:\/\//.test(u))||(d&&!/^https?:\/\//.test(d))){ showToast('새 주소는 https://로 시작해야 합니다.'); return; }
+    if(a&&!/^\//.test(a)){ showToast('새 개인화 API URL은 /로 시작해야 합니다.'); return; }
+  }
+  return _sf59.apply(this,arguments);
+};
+const _psc59=persistSc;
+persistSc=function(){
+  const g=function(id){ return ((document.getElementById(id)||{}).value||'').trim(); };
+  const on=(document.getElementById('f-sc-rsv')||{}).checked, had=state.ctx.id&&(lnbFind('sc',state.ctx.id)||{}).urlRsv;
+  const rsv=on?{at:g('f-sc-rsv-at').replace('T',' ').slice(0,16),url:g('f-sc-rsv-url'),domain:g('f-sc-rsv-domain'),api:g('f-sc-rsv-api')}:null;
+  const msg=_psc59.apply(this,arguments);
+  const s=lnbFind('sc',String(state.flashCall||'').replace(/^sc:/,''));
+  if(s&&state.ctx.id){ s.urlRsv=rsv;
+    if(rsv) AUTH_LOGS.unshift([nowStr(),curName(),navPath('content-lnb'),'수정','서비스 바로가기 "'+s.name+'" 주소 변경 예약 ('+rsv.at+' → '+(rsv.url||((rsv.domain||'현재 도메인')+' + '+(rsv.api||'현재 API')))+')']);
+    else if(had) AUTH_LOGS.unshift([nowStr(),curName(),navPath('content-lnb'),'수정','서비스 바로가기 "'+s.name+'" 주소 변경 예약 취소']); }
+  return msg;
+};
+EDIT_ROUTES.scEdit.persist=persistSc; EDIT_ROUTES.regSc.persist=persistSc;
+
+/* ---- 3) 권한 변경 로그: 원본 JSON 미표시 ---- */
+const _lgDraw59=lgDraw;
+lgDraw=function(){
+  const r=AUTH_LOGS.find(function(x){ return x._id===state.lgOpen; }), perm=r&&lgMeta(r).key==='auth-perm';
+  if(perm) state.lgTab='sum';
+  _lgDraw59.apply(this,arguments);
+  if(perm){ const t=document.querySelector('.lgm-tabs'); if(t) t.innerHTML='<b class="lgm-tt">메뉴별 권한 변경 내용</b>'; }
+};
+
+/* ---- 5) 상품 설문: '연결 안 함' 제외 ---- */
+const _svs59=surveySection;
+surveySection=function(r){
+  const tpl=document.createElement('template'); tpl.innerHTML=_svs59.apply(this,arguments);
+  tpl.content.querySelectorAll('select.sv-link').forEach(function(sel,i){
+    const none=sel.querySelector('option[value=""]'); if(none) none.remove();
+    sel.setAttribute('data-req',''); sel.setAttribute('data-label',(sel.getAttribute('data-kind')||'')+' 설문');
+    if(!sel.querySelector('option[selected]')&&sel.options.length){ sel.options[0].setAttribute('selected',''); const box=tpl.content.getElementById('sv-card-box-'+(sel.id.split('-').pop())); if(box) box.innerHTML=svCardHtml(svById(sel.options[0].value),r.editKey).replace('<div class="sv-card">','<div class="sv-card"><div class="sv-new-n">저장하면 이 설문이 연결됩니다.</div>'); }
+  });
+  const d=document.createElement('div'); d.appendChild(tpl.content.cloneNode(true)); return d.innerHTML;
+};
+
+/* 목록 보조: 이벤트 유형 관리 버튼 · 바로가기 변경 예약 표시 */
+const _r59=render;
+render=function(){
+  const x=_r59.apply(this,arguments);
+  try{
+    if(state.mode==='list'&&state.menu==='content-badge'&&can('content-badge','u')){ const ta=document.querySelector('#main .tcard .thead .ta'); if(ta&&!ta.querySelector('.ev-tm')) ta.insertAdjacentHTML('afterbegin','<button class="btn-line ev-tm" onclick="evTypeOpen()">유형 관리</button>'); }
+    if(state.mode==='list'&&state.menu==='content-lnb') document.querySelectorAll('#main tr[data-call^="sc:"]').forEach(function(tr){ const s=lnbFind('sc',tr.getAttribute('data-call').slice(3)); if(s&&s.urlRsv&&!tr.querySelector('.sc-rsv-tag')){ const td=tr.querySelector('.sc-per-td'); if(td) td.insertAdjacentHTML('beforeend','<span class="sc-rsv-tag">주소 변경 예약 '+s.urlRsv.at.slice(5,16)+'</span>'); } });
+  }catch(e){ console.error(e); }
+  return x;
+};
+TIPS['주소 변경 예약']='링크 주소가 바뀔 날짜를 미리 알고 있을 때 씁니다. 적용 일시가 되면 자동으로 새 주소로 연결됩니다.';
+render();
+/* 이벤트 등록·수정: 공지 미리보기 제외 · 제목 '이벤트' */
+const _pvt59=pvTarget;
+pvTarget=function(){ const k=String(state.editKey); if(/^evt/.test(k)||(k==='regNotice'&&state.reg&&state.reg.type==='event')) return null; return _pvt59.apply(this,arguments); };
+const _r59b=render;
+render=function(){ const x=_r59b.apply(this,arguments); try{ if(state.mode==='edit'){ const t=document.querySelector('#main .pagetitle'); if(t) [...t.childNodes].forEach(function(n){ if(n.nodeType===3&&/출석 이벤트/.test(n.textContent)) n.textContent=n.textContent.replace('출석 이벤트','이벤트'); }); } }catch(e){} return x; };
+render();
+/* 이벤트 등록은 배지/이벤트 관리 메뉴 안에서 */
+const _oe59=openEdit;
+openEdit=function(k,end){ const x=_oe59.apply(this,arguments); if(state.mode==='edit'&&k==='regNotice'&&state.reg&&state.reg.type==='event'&&state.menu!=='content-badge'){ state.menu='content-badge'; render(); } return x; };
+const _st59=typeof setRegType==='function'?setRegType:null;
+if(_st59) setRegType=function(t){ const x=_st59.apply(this,arguments); if(state.mode==='edit'&&state.editKey==='regNotice'){ const m=t==='event'?'content-badge':'content-notice'; if(state.menu!==m){ state.menu=m; render(); } } return x; };
+/* =====================================================================
+   v60
+   1) 용어: '개인화 링크' → '자동 로그인 링크' (어드민 전체)
+   2) 이벤트 유형: 학습 미션 · 기타 삭제
+   3) 변경 이력: 원본 JSON 영역 전체 제거
+   ===================================================================== */
+/* ---- 1) 용어 변경 ---- */
+const TERM_MAP=[[/개인화\s?링크 호출 API URL/g,'로그인 연동 API URL'],[/개인화\s?API\s?URL/g,'로그인 연동 API URL'],[/개인화\s?API/g,'로그인 연동 API'],[/개인화\s?링크/g,'자동 로그인 링크']];
+function termFix(s){ if(typeof s!=='string'||s.indexOf('개인화')<0) return s; TERM_MAP.forEach(function(m){ s=s.replace(m[0],m[1]); }); return s; }
+LINK_LABEL.p='자동 로그인 링크';
+LK_TYPES.forEach(function(t){ t.t=termFix(t.t); t.d=termFix(t.d); });
+Object.keys(TIPS).forEach(function(k){ TIPS[k]=termFix(TIPS[k]); if(/개인화/.test(k)){ TIPS[termFix(k)]=TIPS[k]; } });
+Object.keys(PAGE_TIP).forEach(function(k){ PAGE_TIP[k]=termFix(PAGE_TIP[k]); });
+AUTH_LOGS.forEach(function(r){ r[4]=termFix(r[4]); });
+function termWalk(root){
+  if(!root) return;
+  if(root.nodeType===3){ const t=termFix(root.data); if(t!==root.data) root.data=t; return; }
+  if(root.nodeType!==1) return;
+  if(root.tagName==='SCRIPT'||root.tagName==='STYLE'||root.tagName==='TEXTAREA') return;
+  ['placeholder','title','aria-label','data-label','data-pattern-msg'].forEach(function(a){ const v=root.getAttribute&&root.getAttribute(a); if(v&&v.indexOf('개인화')>=0) root.setAttribute(a,termFix(v)); });
+  const w=document.createTreeWalker(root,NodeFilter.SHOW_TEXT,null); let n; while((n=w.nextNode())){ if(n.data.indexOf('개인화')>=0) n.data=termFix(n.data); }
+  root.querySelectorAll&&root.querySelectorAll('[placeholder*="개인화"],[title*="개인화"],[aria-label*="개인화"],[data-label*="개인화"],[data-pattern-msg*="개인화"]').forEach(function(el){ ['placeholder','title','aria-label','data-label','data-pattern-msg'].forEach(function(a){ const v=el.getAttribute(a); if(v) el.setAttribute(a,termFix(v)); }); });
+}
+const _uLog60=AUTH_LOGS.unshift;
+AUTH_LOGS.unshift=function(){ [].forEach.call(arguments,function(r){ if(r&&r[4]) r[4]=termFix(r[4]); }); return _uLog60.apply(this,arguments); };
+try{ new MutationObserver(function(ms){ ms.forEach(function(m){ m.addedNodes.forEach(function(n){ termWalk(n); }); }); }).observe(document.body,{childList:true,subtree:true}); }catch(e){}
+termWalk(document.body);
+
+/* ---- 2) 이벤트 유형 정리 ---- */
+['study','etc'].forEach(function(k){ if(EV_TYPES[k]&&!badgeEvents.rows.some(function(r){ return r.type===k; })){ EV_TYPES[k].deleted=true; EV_TYPES[k].use=false; } });
+PAGE_TIP['content-badge']='출석체크 등 이벤트와 그 기간에 지급할 배지를 함께 관리합니다. 다른 유형은 [+ 직접 입력] 또는 [유형 관리]에서 추가합니다.';
+
+/* ---- 3) 변경 이력: 원본 JSON 제거 ---- */
+const _lgDraw60=lgDraw;
+lgDraw=function(){
+  state.lgTab='sum';
+  _lgDraw60.apply(this,arguments);
+  const t=document.querySelector('.lgm-tabs'); if(t&&!t.querySelector('.lgm-tt')) t.innerHTML='<b class="lgm-tt">항목별 변경 내용</b>';
+  document.querySelectorAll('.lgm-raw').forEach(function(x){ x.remove(); });
+};
+lgCopy=function(){};
 render();
 </script>
 </body>
