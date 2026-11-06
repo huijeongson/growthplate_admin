@@ -2155,6 +2155,100 @@ tr.pm-new-row td{background:#F4FBF7}
 .sv-new-n{font-size:12px;color:#B26A00;background:#FFF4E0;border-radius:6px;padding:4px 8px;align-self:flex-start}
 #cms-hall-link.hidden-field{display:none}
 #nc-hall-link.hidden-field{display:none}
+.sc-chg{margin-top:10px;padding:12px 14px;background:#F7FAFF;border:1px solid #D6E2FA;border-radius:10px;display:flex;flex-direction:column;gap:8px;max-width:640px}
+.sc-chg.hidden-field{display:none}.sc-chg label{display:flex;align-items:center;gap:10px;font-size:12.5px;font-weight:700;color:#3B4A6B}.sc-chg input{height:36px;width:220px}.sc-chg .fhint{margin:0}
+.sc-chg-note{margin:16px 22px 0;padding:10px 14px;border-radius:10px;background:#EEF4FE;border:1px solid #D6E2FA;color:#1F3F8A;font-size:13px}
+.sc-chg label span{white-space:nowrap}.sc-chg input#f-sc-chg-at{width:220px !important;flex:none}
+/* v63 앱 메뉴 미리보기 */
+.amp-dev{background:#E9EEF2;position:relative}
+.amp-bg{position:absolute;inset:0;background:linear-gradient(#F9F2E8,#F9F2E8);opacity:.6}
+.amp-dev::after{content:"";position:absolute;inset:0;background:rgba(17,24,39,.38);pointer-events:none;left:250px}
+.amp-drawer{position:absolute;top:0;left:0;bottom:0;width:250px;background:#fff;display:flex;flex-direction:column;box-shadow:6px 0 18px rgba(0,0,0,.12);z-index:1}
+.amp-top{display:flex;gap:10px;align-items:center;padding:20px 16px 16px;background:#1FAA6B;color:#fff}
+.amp-top b{display:block;font-size:14px}.amp-top small{font-size:11px;opacity:.85}
+.amp-av{width:34px;height:34px;border-radius:50%;background:rgba(255,255,255,.25);display:grid;place-items:center;font-weight:700}
+.amp-apps{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;padding:14px 10px;border-bottom:8px solid #F3F5F7}
+.amp-app{display:flex;flex-direction:column;align-items:center;gap:6px;background:none;border:0;font-size:11px;color:#1F252C;cursor:pointer;padding:6px 0;border-radius:8px}
+.amp-app:hover,.amp-sc:hover{background:#EEF8F2}
+.amp-ic{width:36px;height:36px;border-radius:12px;background:#F3F5F7;display:grid;place-items:center;font-size:17px}
+.amp-sc-h{font-size:11px;color:#6B7684;padding:14px 16px 6px;font-weight:600}
+.amp-scs{overflow:auto;flex:1}
+.amp-sc{display:flex;align-items:center;justify-content:space-between;width:100%;background:none;border:0;padding:11px 16px;font-size:13px;color:#1F252C;cursor:pointer;text-align:left}
+.amp-sc svg{width:14px;height:14px;color:#9AA4AF;flex:none}
+.amp-empty{font-size:12px;color:#9AA4AF;padding:8px 16px}
+.amp-side{display:flex;flex-direction:column;gap:18px;min-width:0}
+.amp-head{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap}
+.amp-head h3{font-size:17px;margin:0 0 4px}.amp-head p{margin:0;font-size:13px;color:#6B7684}
+.amp-date{display:flex;align-items:center;gap:8px;font-size:13px;color:#4E5968}
+.amp-date input{height:34px;border:1px solid var(--c-line);border-radius:8px;padding:0 10px;font:inherit}
+.amp-sec{display:flex;flex-direction:column;gap:8px}
+.amp-sec-h,.amp-off summary{display:flex;gap:8px;align-items:baseline;font-size:14px}
+.amp-sec-h span,.amp-off summary span{color:#6B7684;font-size:13px}
+.amp-off summary{cursor:pointer;list-style:none;padding:4px 0}.amp-off summary::before{content:"›";display:inline-block;transition:transform .15s;color:#6B7684}
+.amp-off[open] summary::before{transform:rotate(90deg)}
+.amp-off{gap:8px}
+.amp-chips{display:flex;flex-wrap:wrap;gap:8px}
+.amp-chip{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--c-line);background:#fff;border-radius:999px;padding:6px 12px;font-size:13px;cursor:pointer}
+.amp-chip:hover{border-color:#1FAA6B}
+.amp-row{display:flex;align-items:center;gap:10px;border:1px solid var(--c-line);border-radius:12px;padding:12px 14px;background:#fff}
+.amp-row b{font-size:14px;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.amp-row.off{background:#FAFBFC}.amp-row.off b{color:#6B7684}
+.amp-n{width:16px;color:#9AA4AF;font-size:13px}
+.amp-edit{font-size:13px;color:#4E5968;cursor:pointer;white-space:nowrap}
+.amp-foot{font-size:12px;color:#8B95A1}.amp-foot a{color:#11804A;cursor:pointer;text-decoration:underline}
+.amp-app span:last-child{white-space:nowrap;font-size:10.5px;letter-spacing:-.3px}
+.amp-act{display:flex;gap:8px}
+.amp-ic.sm{width:30px;height:30px;border-radius:9px;font-size:15px;flex:none}
+.amp-row .amp-link{color:#6B7684;font-size:13px;white-space:nowrap}
+.amp-hr{border:0;border-top:1px solid var(--c-line);margin:4px 0}
+/* v65 앱 메뉴 미리보기 (실제 앱 LNB) */
+.ampx-dev{background:#F8F2EA}
+.ampx-dr{position:absolute;inset:0;background:#20AB6E;color:#fff;border-radius:0 26px 0 0;display:flex;flex-direction:column;padding:22px 20px 14px;overflow:auto}
+.ampx-dr svg{width:22px;height:22px;flex:none}
+.ampx-top{display:flex;justify-content:space-between;align-items:center}
+.ampx-logo{display:flex;align-items:center;gap:2px;font-size:19px;letter-spacing:-.5px}
+.ampx-logo b{font-weight:800}.ampx-logo i{width:9px;height:9px;border-radius:50%;background:#E8202A;margin:0 3px 6px 1px;box-shadow:0 0 0 1.5px #fff}
+.ampx-logo small{font-size:13px;font-weight:700;margin-left:2px}
+.ampx-user{margin:22px 0 0;padding-bottom:16px;border-bottom:1px solid rgba(255,255,255,.28)}
+.ampx-user b{display:block;font-size:21px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ampx-user div{display:flex;justify-content:space-between;align-items:center;margin-top:6px;font-size:14px;opacity:.95}
+.ampx-user svg{width:19px;height:19px}
+.ampx-menu{display:flex;flex-direction:column;gap:4px;margin-top:16px}
+.ampx-mi{display:flex;align-items:center;gap:14px;height:42px;padding:0 16px;border:0;border-radius:999px;background:none;color:#fff;font:inherit;font-size:14px;cursor:pointer;text-align:left}
+.ampx-mi:hover{background:#1D8D5D}
+.ampx-mi.on{background:#F8F2EA;color:#1A9A62;font-weight:700}
+.ampx-mi svg{width:21px;height:21px}
+.ampx-emo{width:21px;text-align:center;font-size:16px}
+.ampx-sh{font-size:13px;font-weight:700;margin:22px 0 10px}
+.ampx-box{background:#1E9A65;border-radius:12px;padding:6px;display:flex;flex-direction:column}
+.ampx-si{border:0;background:none;color:#fff;font:inherit;font-size:13.5px;text-align:left;padding:10px 12px;border-radius:7px;cursor:pointer}
+.ampx-si:hover{background:#1A8358;font-weight:700}
+.ampx-none{font-size:12px;opacity:.8;padding:8px 12px;margin:0}
+.ampx-copy{margin-top:auto;padding-top:18px;font-size:11px;opacity:.6}
+.ampx-app{display:grid;grid-template-columns:52px minmax(0,1fr);height:100%}
+.ampx-rail{background:#20AB6E;border-radius:0 22px 0 0;display:flex;flex-direction:column;align-items:center;padding-top:16px;gap:10px}
+.ampx-ham{color:#fff;margin-bottom:28px}.ampx-ham svg{width:22px;height:22px}
+.ampx-ri{position:relative;width:44px;height:40px;margin-left:8px;border:0;background:none;color:#fff;cursor:pointer;display:grid;place-items:center;border-radius:20px 0 0 20px}
+.ampx-ri svg{width:20px;height:20px;margin-right:8px}
+.ampx-ri.on{background:#F8F2EA;color:#1A9A62}
+.ampx-ri.on::before,.ampx-ri.on::after{content:"";position:absolute;right:0;width:14px;height:14px;background:transparent}
+.ampx-ri.on::before{top:-14px;border-bottom-right-radius:14px;box-shadow:5px 5px 0 5px #F8F2EA}
+.ampx-ri.on::after{bottom:-14px;border-top-right-radius:14px;box-shadow:5px -5px 0 5px #F8F2EA}
+.ampx-main{padding:16px 14px;display:flex;flex-direction:column;gap:12px;overflow:hidden}
+.ampx-mh{display:flex;justify-content:space-between;align-items:center}.ampx-mh b{font-size:15px}.ampx-mh span{font-size:11px;color:#4E5968}
+.ampx-card{height:96px;border-radius:16px;background:#fff}.ampx-card.s{height:70px;background:#E6F0FC}
+.ampx-dev:not(.rail) .ampx-dr{border-radius:0}
+.amp-ic.sm{color:#1A9A62;background:#EEF8F2}.amp-ic.sm svg{width:17px;height:17px}
+/* v66 */
+input.ro-in{background:#F5F6F8!important;border-color:transparent!important;color:#333D4B;cursor:default;box-shadow:none!important}
+tr.lg-row{cursor:pointer}tr.lg-row:hover td{background:#F4FAF6}
+.emg-menu .thead small{font-size:12px;color:#8B95A1;font-weight:400;margin-left:8px}
+.emg-ord{display:flex;align-items:center;gap:4px}.emg-ord b{width:22px;font-weight:600}
+.emg-ord button,.emg-del{width:28px;height:28px;border:1px solid var(--c-line);background:#fff;border-radius:8px;display:grid;place-items:center;cursor:pointer;color:#4E5968;padding:0}
+.emg-ord button:disabled{opacity:.35;cursor:default}.emg-ord svg{width:14px;height:14px}
+.emg-del svg{width:15px;height:15px}.emg-del:hover{color:#D22;border-color:#F3B5B5}
+.emg-menu select.ddl{width:100%;max-width:280px}
+.emg-foot{display:flex;justify-content:flex-end;padding:14px 20px;border-top:1px solid var(--c-line)}
 </style>
 </head>
 <body>
@@ -9292,6 +9386,402 @@ lgDraw=function(){
   document.querySelectorAll('.lgm-raw').forEach(function(x){ x.remove(); });
 };
 lgCopy=function(){};
+render();
+/* =====================================================================
+   v61
+   1) 서비스 바로가기 수정: '노출' → 'LNB 노출 여부'
+   2) 변경 예약: 링크 입력칸 없이 [체크 + 적용 일시]만, 맨 아래 섹션으로 이동
+      → 체크하고 저장하면 위에서 고친 바로가기 정보가 그 일시에 적용
+   3) 상품 관리: '과정/세트 없는 서책' 선택지 삭제
+   ===================================================================== */
+/* ---- 3) 과정/세트 없는 서책 삭제 ---- */
+(function(){ const i=LK_TYPES.findIndex(function(t){ return t.k==='nocourse'; }); if(i>=0) LK_TYPES.splice(i,1); })();
+const _lki61=lkInit;
+lkInit=function(r){ const x=_lki61.apply(this,arguments); if(x.links[0]&&x.links[0].type==='nocourse') x.links[0]={type:'cms'}; return x; };
+growthProducts.rows.forEach(function(r){ if(r.ext&&r.ext.links&&r.ext.links[0]&&r.ext.links[0].type==='nocourse') r.ext.links=[{type:'cms'}]; });
+
+/* ---- 1·2) 서비스 바로가기 ---- */
+const SC_RSV_KEYS=['name','mode','url','domain','api','btn'];
+function scRsvAt(){ return ((document.getElementById('f-sc-chg-at')||{}).value||'').trim(); }
+function scChgToggle(on){ const b=document.getElementById('sc-chg-box'); if(b) b.classList.toggle('hidden-field',!on); markDirty(); }
+scRsvHtml=function(){ return ''; };
+const _scf61=scFormHtml;
+scFormHtml=function(){
+  const isNew=!state.ctx.id, s=isNew?null:lnbFind('sc',state.ctx.id), r=s&&s.chgRsv;
+  let bak=null; if(r){ bak={}; SC_RSV_KEYS.forEach(function(k){ bak[k]=s[k]; }); Object.assign(s,r.next); }
+  let h; try{ h=_scf61.apply(this,arguments); } finally { if(bak) Object.assign(s,bak); }
+  h=h.replace(/(<div class="flabel">)노출(<span class="req">)/,'$1LNB 노출 여부$2');
+  if(isNew) return h;
+  const def=(function(){ const d=new Date(Date.now()+7*864e5); return d.toISOString().slice(0,10)+' 00:00'; })();
+  const sec=(fieldRow('변경 예약',false,`<label class="chk"><input type="checkbox" id="f-sc-chg" ${r?'checked':''} onchange="scChgToggle(this.checked)"> 정해진 일시에 변경 내용을 적용합니다</label>
+    <div id="sc-chg-box" class="sc-chg ${r?'':'hidden-field'}"><label><span>적용 일시</span><input id="f-sc-chg-at" type="text" maxlength="16" value="${r?r.at:def}" placeholder="YYYY-MM-DD HH:mm"></label>
+    <div class="fhint">체크하고 저장하면 위에서 고친 이름·링크 방식·주소·버튼명이 이 일시에 적용되고, 그 전까지는 지금 내용이 그대로 노출됩니다. 체크를 끄고 저장하면 바로 적용됩니다.</div></div>`));
+  const note=r?`<div class="sc-chg-note">이 바로가기에 <b>${esc(r.at)}</b> 변경 예약이 있습니다. 아래 입력칸에는 예약된 내용이 표시됩니다.</div>`:'';
+  h=h.replace('<div class="form-card pf2" data-pf2>','<div class="form-card pf2" data-pf2>'+note);
+  const bi=h.indexOf('바로가기 버튼명'), end=bi>=0?h.indexOf('</section>',bi):-1;
+  if(end>=0){ const cut=h.lastIndexOf('</div>',end); return h.slice(0,cut)+sec+h.slice(cut); }
+  return h.replace(/<div class="form-foot">/,sec+'<div class="form-foot">');
+};
+EDIT_ROUTES.scEdit.render=scFormHtml; EDIT_ROUTES.regSc.render=scFormHtml;
+const _sf61=saveForm;
+saveForm=function(){
+  if(state.mode==='edit'&&state.editKey==='scEdit'&&(document.getElementById('f-sc-chg')||{}).checked){
+    const at=scRsvAt();
+    if(!/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}$/.test(at)){ showToast('적용 일시는 YYYY-MM-DD HH:mm 형식으로 입력해 주세요.'); return; }
+    if(new Date(at.replace(' ','T'))<=new Date()){ showToast('적용 일시는 지금 이후로 입력해 주세요.'); return; }
+  }
+  return _sf61.apply(this,arguments);
+};
+const _psc61=persistSc;
+persistSc=function(){
+  const isNew=!state.ctx.id, s0=isNew?null:lnbFind('sc',state.ctx.id), on=!isNew&&(document.getElementById('f-sc-chg')||{}).checked, at=scRsvAt();
+  const had=s0&&s0.chgRsv, old={}; if(s0) SC_RSV_KEYS.forEach(function(k){ old[k]=s0[k]; });
+  const nLog=AUTH_LOGS.length, msg=_psc61.apply(this,arguments);
+  const s=lnbFind('sc',String(state.flashCall||'').replace(/^sc:/,''));
+  if(s&&!isNew){
+    if(on){
+      const next={}; SC_RSV_KEYS.forEach(function(k){ next[k]=s[k]; });
+      Object.assign(s,old); s.chgRsv={at:at,next:next};
+      const ch=SC_RSV_KEYS.filter(function(k){ return String(old[k]||'')!==String(next[k]||''); }).length;
+      if(AUTH_LOGS.length>nLog&&AUTH_LOGS[0]) AUTH_LOGS[0][4]='서비스 바로가기 "'+s.name+'" 변경 예약 ('+at+' 적용 · 바뀐 항목 '+ch+'개)';
+      return '"'+s.name+'" 변경 내용을 '+at+'에 적용하도록 예약했습니다.';
+    }
+    if(had){ s.chgRsv=null; AUTH_LOGS.unshift([nowStr(),curName(),navPath('content-lnb'),'수정','서비스 바로가기 "'+s.name+'" 변경 예약 해제 · 바로 적용']); }
+  }
+  return msg;
+};
+EDIT_ROUTES.scEdit.persist=persistSc; EDIT_ROUTES.regSc.persist=persistSc;
+/* 목록: 변경 예약 표시 */
+const _r61=render;
+render=function(){
+  const x=_r61.apply(this,arguments);
+  try{
+    if(state.mode==='list'&&state.menu==='content-lnb') document.querySelectorAll('#main tr[data-call^="sc:"]').forEach(function(tr){ const s=lnbFind('sc',tr.getAttribute('data-call').slice(3)); if(s&&s.chgRsv&&!tr.querySelector('.sc-rsv-tag')){ const td=tr.querySelector('.sc-per-td'); if(td) td.insertAdjacentHTML('beforeend','<span class="sc-rsv-tag">변경 예약 '+s.chgRsv.at.slice(5,16)+'</span>'); } });
+    if(state.mode==='list'&&state.menu==='content-lnb') document.querySelectorAll('#main thead th').forEach(function(th){ if(th.textContent.trim()==='노출') th.textContent='LNB 노출'; });
+  }catch(e){ console.error(e); }
+  return x;
+};
+delete TIPS['주소 변경 예약'];
+TIPS['변경 예약']='바로가기 정보를 미리 고쳐 두고, 정한 일시에 적용합니다. 그 전까지는 지금 내용이 노출됩니다.';
+TIPS['LNB 노출 여부']='끄면 노출 기간과 관계없이 앱 LNB(메뉴)에서 숨겨집니다.';
+render();
+/* =====================================================================
+   v62 · 문구 정리 (배포 전): 중복·개발용·오래된 안내 문구 삭제 또는 짧게
+   ===================================================================== */
+const COPY_RULES=[
+  /* 삭제 */
+  ['.fhint',/노출 상태는 노출기간에 따라 자동으로 정해집니다/,'del'],
+  ['.fhint',/순서는 획득 조건이 낮은 배지부터/,'del'],
+  ['.pv-side-n',/입력하는 대로/,'del'],
+  ['.lk-sub',/앱에서 상품을 누르면/,'del'],
+  ['*',/^프론트앱은 \[타겟 URL\]/,'del'],
+  ['.fhint',/^(versionName|versionCode)$/,'del'],
+  ['.fhint',/^systemId:/,'del'],
+  ['.new-tag',/신규/,'del'],
+  /* 짧게 */
+  ['*',/^\[타겟 도메인\] \+ \[.*API로 받은 값\]으로 연결합니다/,'[타겟 도메인] + [로그인 연동 API 값]으로 연결합니다.'],
+  ['.fhint',/^마이클래스에 표시되는 바로가기 버튼 이름입니다\. \(서책의 진도 유무가 N인 상품\)$/,'마이클래스에 표시되는 버튼 이름입니다.'],
+  ['.fhint',/^기간이 끝나면 앱 메뉴에서 자동으로 빠집니다\. 노출을 끄면/,'기간이 끝나면 자동으로 빠집니다.'],
+  ['.fhint',/^체크하고 저장하면 위에서 고친/,'체크하고 저장하면 고친 내용이 이 일시에 적용됩니다. 그 전까지는 지금 내용이 유지됩니다.'],
+  ['.fhint',/^LNB에 표시됩니다\. 10자 이내$/,'10자 이내'],
+  ['.fhint',/^편집\(W\)을 고르면 조회\(R\)가 함께/,'편집을 고르면 조회도 함께 선택됩니다.'],
+  ['.pt-hint',/^편집\(W\)을 고르면 조회\(R\)가 함께/,'편집을 고르면 조회도 함께 선택됩니다.'],
+  ['.fhint',/^2개 이상 사용해야 합니다\. 체크를 끄면 앱에서 숨겨집니다\.$/,'2개 이상 사용해야 합니다.'],
+  ['.fhint',/^미사용 시 학습 APP에 업데이트 정책이 전달되지 않습니다\.$/,'미사용이면 업데이트 안내가 나가지 않습니다.'],
+  ['.fhint',/^과정·세트 정보 없이/,'del'],
+  ['.fhint',/^앱 메뉴 관리 › 서비스 바로가기에 등록된 링크입니다\.$/,'del']
+];
+function copyFix(){
+  const roots=[document.getElementById('main'),document.getElementById('sidebar')].filter(Boolean);
+  roots.forEach(function(root){
+    COPY_RULES.forEach(function(r){
+      const els=r[0]==='*'?root.querySelectorAll('div,p,span,small'):root.querySelectorAll(r[0]);
+      els.forEach(function(el){ if(r[0]==='*'&&el.children.length) return; const t=el.textContent.trim(); if(!r[1].test(t)) return; if(r[2]==='del') el.remove(); else el.textContent=r[2]; });
+    });
+  });
+  /* 개별 정리 */
+  const mb=document.querySelector('#main .pt-mbar > div'); if(mb) mb.innerHTML='<b>마스터 관리자</b>는 모든 메뉴(장애 모드·계정/권한 포함)에 전체 권한을 가집니다.';
+  const an=document.getElementById('sv-all-note'); if(an&&!an.getAttribute('data-c')){ an.setAttribute('data-c','1'); an.innerHTML='<b>전과목 공통 설문입니다.</b> 모든 상품에 적용되며, 같은 기간에는 1개만 사용할 수 있습니다.'; }
+  document.querySelectorAll('#main *').forEach(function(el){ if(el.children.length) return; const t=el.textContent; if(/기준 · 왼쪽 화면은 노출 중인 항목/.test(t)) el.textContent='왼쪽은 지금 앱에 노출 중인 화면입니다.'; });
+  const nf=document.querySelector('#sidebar .nav-foot'); if(nf){ const tn=[...nf.childNodes].find(function(n){ return n.nodeType===3&&/협의용/.test(n.textContent); }); if(tn) tn.textContent='성장판 어드민 프로토타입 v6'; }
+}
+const _r62=render;
+render=function(){ const x=_r62.apply(this,arguments); try{ copyFix(); }catch(e){ console.error(e); } return x; };
+/* 도움말(?) 정리 */
+TIPS['서책의 진도 유무']='Y: 진도 있음 / N: 진도 없음. 학습관을 쓰는 서책 상품에만 적용됩니다.';
+PAGE_TIP['content-badge']='출석체크 등 이벤트와 기간 배지를 함께 관리합니다. 새 유형은 [+ 직접 입력] 또는 [유형 관리]에서 추가합니다.';
+render();
+/* 링크 방식 전환 시 다시 생기는 안내도 짧게 */
+document.addEventListener('change',function(){ setTimeout(function(){ try{ copyFix(); }catch(e){} },0); },true);
+/* =====================================================================
+   v63 · 배너/팝업/메시지 관리 › [앱 메뉴 미리보기] 탭
+   - 앱 메뉴(상단 아이콘) + 서비스 바로가기(LNB 노출 Y · 노출 기간 중)만 앱 LNB처럼 보여줌
+   - 기준일을 바꾸면 그 날짜의 노출 상태(기간 노출·변경 예약)로 미리보기
+   ===================================================================== */
+function amPvDate(){ return state.amPvAt||TODAY; }
+function amPvSet(v){ state.amPvAt=/^\d{4}-\d{2}-\d{2}$/.test(v)?v:TODAY; render(); }
+function scStateAt(s,d){
+  if(!s.show) return {k:'off',t:'LNB 노출 N',c:'st-end'};
+  const p=scPer(s); if(p.mode!=='range') return {k:'ing',t:'상시',c:'st-ing'};
+  if(d<p.s) return {k:'pre',t:'노출 예정 '+p.s.slice(5),c:'st-before'};
+  if(d>p.e) return {k:'end',t:'노출 종료',c:'st-end'};
+  return {k:'ing',t:'~ '+p.e.slice(5),c:'st-ing'};
+}
+function scAt(s,d){ const r=s.chgRsv; if(r&&d>=r.at.slice(0,10)) return Object.assign({},s,r.next,{_rsv:true}); return s; }
+function amPvTab(){
+  const d=amPvDate();
+  const apps=SLIDE_DATA.apps.filter(function(a){ return a.show!==false&&a.use!==false; });
+  const all=SLIDE_DATA.shortcuts.map(function(s){ return {s:scAt(s,d),id:s.id,st:scStateAt(s,d)}; });
+  const on=all.filter(function(x){ return x.st.k==='ing'; }), off=all.filter(function(x){ return x.st.k!=='ing'; });
+  const go=function(k,id){ return `onclick="openLnb('${k}','${id}')"`; };
+  const ext='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 4h6v6"/><path d="M20 4l-9 9"/><path d="M19 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1h5"/></svg>';
+  const phone=`<div class="bm2-device amp-dev"><div class="amp-bg"></div>
+    <aside class="amp-drawer">
+      <div class="amp-top"><span class="amp-av">김</span><div><b>김대교</b><small>마이클래스</small></div></div>
+      <div class="amp-apps">${apps.map(function(a){ return `<button type="button" class="amp-app" ${go('am',a.id)} title="${esc(a.name)} 수정"><span class="amp-ic">${a.icon||''}</span><span>${esc(a.name)}</span></button>`; }).join('')}</div>
+      <div class="amp-sc-h">서비스 바로가기</div>
+      <div class="amp-scs">${on.length?on.map(function(x){ return `<button type="button" class="amp-sc" ${go('sc',x.id)} title="${esc(x.s.name)} 수정"><span>${esc(x.s.name)}</span>${ext}</button>`; }).join(''):'<p class="amp-empty">노출 중인 바로가기가 없습니다.</p>'}</div>
+    </aside></div>`;
+  const row=function(x,i){ return `<div class="amp-row ${x.st.k==='ing'?'':'off'}"><span class="amp-n">${i===null?'':i+1}</span><b>${esc(x.s.name)}</b>${x.s._rsv?'<span class="chip t-list">변경 예약 반영</span>':''}<span class="chip ${x.st.c}">${x.st.t}</span><a class="amp-edit" ${go('sc',x.id)}>수정 ›</a></div>`; };
+  return `<section class="bm2-board amp-board">
+    <div class="bm2-phone-col">${phone}</div>
+    <div class="amp-side">
+      <div class="amp-head"><div><h3>앱 메뉴 미리보기</h3><p>LNB 노출 Y이고 노출 기간 중인 바로가기만 앱에 보입니다.</p></div>
+        <label class="amp-date"><span>기준일</span><input type="date" value="${d}" onchange="amPvSet(this.value)">${d!==TODAY?`<button type="button" class="btn-line" onclick="amPvSet('')">오늘</button>`:''}</label></div>
+      <div class="amp-sec"><div class="amp-sec-h"><b>앱 메뉴</b><span>${apps.length}개</span></div>
+        <div class="amp-chips">${apps.map(function(a){ return `<button type="button" class="amp-chip" ${go('am',a.id)}><span>${a.icon||''}</span>${esc(a.name)}</button>`; }).join('')}</div></div>
+      <div class="amp-sec"><div class="amp-sec-h"><b>서비스 바로가기 · 앱 노출</b><span>${on.length}개</span></div>${on.map(row).join('')||'<p class="amp-empty">없음</p>'}</div>
+      ${off.length?`<details class="amp-sec amp-off"><summary><b>앱에 안 보이는 바로가기</b><span>${off.length}개</span></summary>${off.map(function(x){ return row(x,null); }).join('')}</details>`:''}
+      <div class="amp-foot">수정은 <a onclick="go('content-lnb')">앱 메뉴 관리</a>에서 합니다.</div>
+    </div>
+  </section>`;
+}
+(function(){
+  const sc=SCREENS['content-banner'];
+  if(sc&&sc.tabs&&!sc.tabs.some(function(t){ return t.key==='appmenu'; })) sc.tabs.push({key:'appmenu',label:'앱 메뉴 미리보기',render:amPvTab,card:false});
+})();
+render();
+/* =====================================================================
+   v64 · IA 정리
+   1) '배너/팝업/메시지 관리' → '앱 노출 관리'
+   2) 앱 메뉴(마이클래스·마이레벨…) 관리를 앱 노출 관리 › [앱 메뉴] 탭으로 이동 (미리보기와 합침)
+   3) '앱 메뉴 관리' → '자동 로그인 링크' (서비스 바로가기만 관리)
+   ===================================================================== */
+(function(){
+  NAV.forEach(function(g){ (g.items||[]).forEach(function(i){
+    if(i.key==='content-banner') i.label='앱 노출 관리';
+    if(i.key==='content-lnb') i.label='자동 로그인 링크';
+  }); });
+  SCREENS['content-banner'].title='앱 노출 관리';
+  SCREENS['content-lnb'].title='자동 로그인 링크';
+  SCREENS['content-banner'].desc='앱 화면의 배너·팝업, 안내 메시지, LNB 앱 메뉴를 관리합니다.';
+  PAGE_TIP['content-banner']='앱 화면의 배너·팝업, 조건별 안내 메시지, LNB 상단 앱 메뉴를 한곳에서 관리합니다.';
+  PAGE_TIP['content-lnb']='앱 LNB 하단에 보이는 외부 서비스 바로가기를 관리합니다. 상시 노출 또는 기간 노출을 고를 수 있습니다.';
+  Object.keys(TIPS).forEach(function(k){ TIPS[k]=String(TIPS[k]).replace(/앱 메뉴 관리의 서비스 바로가기/g,'자동 로그인 링크 메뉴').replace(/앱 메뉴 관리/g,'자동 로그인 링크'); });
+})();
+
+/* ---- 자동 로그인 링크 화면: 앱 메뉴 블록 제거 ---- */
+const _lp64=lnbPage;
+lnbPage=function(){
+  const h=_lp64.apply(this,arguments), i=h.indexOf('<div class="lnb-blk"><div class="lnb-blk-h"><b>서비스 바로가기');
+  return i>0?h.slice(i):h;
+};
+SCREENS['content-lnb'].render=lnbPage;
+
+/* ---- 앱 메뉴: 앱 노출 관리 › [앱 메뉴] 탭으로 ---- */
+['amEdit','regAm'].forEach(function(k){ if(EDIT_ROUTES[k]){ EDIT_ROUTES[k].menu='content-banner'; EDIT_ROUTES[k].tab='앱 메뉴'; } });
+const _ol64=openLnb, _olr64=openLnbReg;
+openLnb=function(kind,id){ if(kind!=='am') return _ol64.apply(this,arguments); state.ctx={kind:'am',id:id}; state.menu='content-banner'; state.tabs['content-banner']='appmenu'; openEdit('amEdit'); };
+openLnbReg=function(kind){ if(kind!=='am') return _olr64.apply(this,arguments); state.ctx={kind:'am',id:null}; state.menu='content-banner'; state.tabs['content-banner']='appmenu'; openEdit('regAm'); };
+lnbMenu=function(kind){ return kind==='am'?'content-banner':'content-lnb'; };
+
+function amTab(){
+  const pv=amPvTab(), apps=SLIDE_DATA.apps;
+  const amSec=`<div class="amp-head"><div><h3>앱 메뉴</h3><p>LNB 상단에 아이콘으로 보이는 메뉴입니다. 누르면 수정할 수 있습니다.</p></div>
+      <div class="amp-act"><button class="btn-line" onclick="openLnbOrder('am')">순서 변경</button><button class="btn btn-primary" onclick="openLnbReg('am')">+ 등록</button></div></div>
+    <div class="amp-sec">${apps.length?apps.map(function(a,i){ return `<div class="amp-row" data-call="am:${a.id}"><span class="amp-n">${i+1}</span><span class="amp-ic sm">${typeof ampIcon==="function"?ampIcon(a):(a.icon||"")}</span><b>${esc(a.name)}</b><span class="amp-link">${esc(a.link||'')}</span><a class="amp-edit" onclick="openLnb('am','${a.id}')">수정 ›</a></div>`; }).join(''):'<p class="amp-empty">등록된 앱 메뉴가 없습니다.</p>'}</div>
+    <hr class="amp-hr">`;
+  return pv
+    .replace(/<div class="amp-head"><div><h3>앱 메뉴 미리보기<\/h3><p>[^<]*<\/p><\/div>/,amSec+'<div class="amp-head"><div><h3>서비스 바로가기</h3><p>LNB 노출 Y이고 노출 기간 중인 바로가기만 앱에 보입니다.</p></div>')
+    .replace(/<div class="amp-sec"><div class="amp-sec-h"><b>앱 메뉴<\/b>[\s\S]*?<\/div><\/div>\s*<div class="amp-sec"><div class="amp-sec-h"><b>서비스 바로가기 · 앱 노출/,'<div class="amp-sec"><div class="amp-sec-h"><b>앱 노출')
+    .replace(/수정은 <a onclick="go\('content-lnb'\)">앱 메뉴 관리<\/a>에서 합니다\./,'바로가기 수정은 <a onclick="go(\'content-lnb\')">자동 로그인 링크</a>에서 합니다.');
+}
+(function(){
+  const t=SCREENS['content-banner'].tabs.find(function(x){ return x.key==='appmenu'; });
+  if(t){ t.label='앱 메뉴'; t.render=amTab; }
+})();
+
+/* ---- 이력 경로 정리 ---- */
+function logFix64(r){
+  if(!r) return;
+  const m=String(r[4]||'');
+  if(/^(LNB )?앱 메뉴 "/.test(m)||(/LNB 앱 메뉴관리/.test(r[2]))){ r[2]=navPath('content-banner')+' › 앱 메뉴'; r[4]=m.replace(/^LNB 앱 메뉴/,'앱 메뉴'); }
+  else if(/서비스 바로가기|앱 메뉴 관리|LNB 관리/.test(r[2])||/^서비스 바로가기/.test(m)) r[2]=navPath('content-lnb');
+  r[2]=String(r[2]).replace(/배너\/팝업\/메시지 관리/,'앱 노출 관리');
+  delete r._m;
+}
+const _nl64=normalizeLogs;
+normalizeLogs=function(){ _nl64.apply(this,arguments); AUTH_LOGS.forEach(logFix64); };
+const _u64=AUTH_LOGS.unshift;
+AUTH_LOGS.unshift=function(){ const n=_u64.apply(this,arguments); for(let i=0;i<arguments.length;i++) logFix64(AUTH_LOGS[i]); return n; };
+normalizeLogs();
+
+/* ---- 화면 문구: 남은 '앱 메뉴 관리' → '자동 로그인 링크' ---- */
+const _r64=render;
+render=function(){
+  const x=_r64.apply(this,arguments);
+  try{ const m=document.getElementById('main'); if(m){ const w=document.createTreeWalker(m,NodeFilter.SHOW_TEXT,null); let n; while((n=w.nextNode())){ if(n.data.indexOf('앱 메뉴 관리')>=0) n.data=n.data.replace(/앱 메뉴 관리/g,'자동 로그인 링크'); } } }catch(e){ console.error(e); }
+  return x;
+};
+const _st64=showToast; showToast=function(m){ arguments[0]=String(m).replace(/LNB 앱 메뉴/g,"앱 메뉴"); return _st64.apply(this,arguments); };
+render();
+/* =====================================================================
+   v65 · 앱 메뉴 미리보기: 실제 앱 LNB 디자인(펼친 메뉴 / 접힌 메뉴) 반영
+   ===================================================================== */
+const AMP_IC={
+  '마이클래스':'<path d="M4 10.5L12 4l8 6.5V20h-5v-5.5H9V20H4z"/>',
+  '마이레벨':'<path d="M12 21s-7-4.6-7-11a7 7 0 0 1 11.5-5.4"/><path d="M19 10c0 6.4-7 11-7 11"/><path d="M14.5 6.5l3-3 2 2-3 3-2.6.6z"/>',
+  '성장배지':'<path d="M7 3h10l-3 5h-4z"/><path d="M12 10l1.8 3.6 4 .6-2.9 2.8.7 4L12 19.1 8.4 21l.7-4-2.9-2.8 4-.6z"/>',
+  '공지알림':'<path d="M6 16V11a6 6 0 0 1 12 0v5l1.5 2h-15z"/><path d="M10 20a2 2 0 0 0 4 0"/>'
+};
+function ampIcon(a){
+  const p=AMP_IC[a.link]||AMP_IC[a.name];
+  return p?`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${p}</svg>`:`<span class="ampx-emo">${a.icon||'•'}</span>`;
+}
+function ampMode(m){ state.ampMode=m; render(); }
+function ampAct(i){ state.ampAct=i; render(); }
+function ampPhone(){
+  const d=amPvDate(), mode=state.ampMode||'open';
+  const apps=SLIDE_DATA.apps.filter(function(a){ return a.show!==false&&a.use!==false; });
+  const act=Math.min(state.ampAct||0,Math.max(apps.length-1,0));
+  const scs=SLIDE_DATA.shortcuts.filter(function(s){ return scStateAt(s,d).k==='ing'; }).map(function(s){ return {id:s.id,s:scAt(s,d)}; });
+  const svg=function(p){ return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${p}</svg>`; };
+  const seg=`<div class="bm-seg"><button type="button" class="${mode==='open'?'on':''}" onclick="ampMode('open')">펼친 메뉴</button><button type="button" class="${mode==='rail'?'on':''}" onclick="ampMode('rail')">접힌 메뉴</button></div>`;
+  let dev;
+  if(mode==='open'){
+    dev=`<div class="bm2-device ampx-dev"><div class="ampx-dr">
+      <div class="ampx-top"><span class="ampx-logo"><b>눈높이</b><i></i><small>성장판</small></span>${svg('<path d="M6 6l12 12M18 6L6 18"/>')}</div>
+      <div class="ampx-user"><b>김대교</b><div><span>초등2</span>${svg('<path d="M10 4H5v16h5"/><path d="M14 8l4 4-4 4"/><path d="M18 12H9"/>')}</div></div>
+      <div class="ampx-menu">${apps.map(function(a,i){ return `<button type="button" class="ampx-mi ${i===act?'on':''}" onclick="ampAct(${i})">${ampIcon(a)}<span>${esc(a.name)}</span></button>`; }).join('')||'<p class="ampx-none">앱 메뉴가 없습니다.</p>'}</div>
+      <div class="ampx-sh">다른 학습으로 이동</div>
+      <div class="ampx-box">${scs.map(function(x){ return `<button type="button" class="ampx-si" onclick="openLnb('sc','${x.id}')" title="${esc(x.s.name)} 수정">${esc(x.s.name)}</button>`; }).join('')||'<p class="ampx-none">노출 중인 바로가기가 없습니다.</p>'}</div>
+      <div class="ampx-copy">© DAEKYO Co., Ltd</div>
+    </div></div>`;
+  } else {
+    const cur=apps[act]||{name:'마이클래스'};
+    dev=`<div class="bm2-device ampx-dev rail"><div class="ampx-app">
+      <aside class="ampx-rail"><span class="ampx-ham">${svg('<path d="M4 7h16M4 12h16M4 17h16"/>')}</span>
+        ${apps.map(function(a,i){ return `<button type="button" class="ampx-ri ${i===act?'on':''}" onclick="ampAct(${i})" title="${esc(a.name)}">${ampIcon(a)}</button>`; }).join('')}</aside>
+      <div class="ampx-main"><div class="ampx-mh"><b>${esc(cur.name)}</b><span>김대교</span></div>
+        <div class="ampx-card"></div><div class="ampx-card s"></div><div class="ampx-card"></div></div>
+    </div></div>`;
+  }
+  return seg+dev;
+}
+const _apv65=amPvTab;
+amPvTab=function(){
+  const h=_apv65.apply(this,arguments), a=h.indexOf('<div class="bm2-phone-col">'), b=h.indexOf('<div class="amp-side">');
+  if(a<0||b<0) return h;
+  return h.slice(0,a)+'<div class="bm2-phone-col">'+ampPhone()+'</div>\n    '+h.slice(b);
+};
+render();
+/* =====================================================================
+   v66 · 군더더기 정리 + 단순화 + 용어 통일(노출/숨김)
+   1) 목록 뒤로가기·체크박스 / 변경 이력 새로고침·상세 열 / 권한 요약·펼치기 /
+      로그인 이력 KPI·시리얼번호 / 자동 로그인 링크 '링크 방식' 열 삭제
+   2) 장애 모드 다른 학습 메뉴 = 자동 로그인 링크에서 선택 · 숨김처리 삭제
+      상품: 뉴드림스 정보 읽기 전용 · 설문은 고르기만
+      이벤트: '+ 직접 입력' 삭제(유형 관리로 일원화) · 이벤트명 구분
+   3) 켜기/끄기 용어 '노출/숨김'으로 통일 (앱 버전 배포·디지털 학습앱 사용여부 제외)
+   ===================================================================== */
+
+/* ---------- 2) 장애 모드: 다른 학습 메뉴 ---------- */
+const EMG_LIST=(function(){
+  const map={'리그오브매스 참여하기':'리그오브매스'}, out=[];
+  emergencyMenus.forEach(function(m){ if(m.hide!=='노출') return; const s=SLIDE_DATA.shortcuts.find(function(x){ return x.name===(map[m.name]||m.name); }); if(s) out.push(s.id); });
+  return out;
+})();
+function emgMove(i,d){ const j=i+d; if(j<0||j>=EMG_LIST.length) return; const t=EMG_LIST[i]; EMG_LIST[i]=EMG_LIST[j]; EMG_LIST[j]=t; markDirty(); render(); }
+function emgSet(i,v){ if(!v||i>=EMG_LIST.length) return; EMG_LIST[i]=v; markDirty(); render(); }
+function emgDel(i){ EMG_LIST.splice(i,1); markDirty(); render(); }
+function emgAdd(){ const s=SLIDE_DATA.shortcuts.find(function(x){ return EMG_LIST.indexOf(x.id)<0; }); if(!s){ showToast('추가할 수 있는 바로가기가 없습니다. 자동 로그인 링크에서 먼저 등록해 주세요.'); return; } EMG_LIST.push(s.id); markDirty(); render(); }
+function emgSave(){
+  if(!guard('app-emergency','u')) return;
+  const names=EMG_LIST.map(function(id){ const s=lnbFind('sc',id); return s?s.name:id; });
+  AUTH_LOGS.unshift([nowStr(),curName(),navPath('app-emergency'),'수정','장애 시 노출할 다른 학습 메뉴 저장 ('+names.join(', ')+')']);
+  state.dirty=false; showToast('다른 학습 메뉴를 저장했습니다.'); render();
+}
+emergencyMenuList=function(){
+  const arw=function(p){ return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="${p}"/></svg>`; };
+  const rows=EMG_LIST.map(function(id,i){ const s=lnbFind('sc',id)||{};
+    return `<tr><td><div class="emg-ord"><b>${i+1}</b><button type="button" onclick="emgMove(${i},-1)" ${i?'':'disabled'} aria-label="위로">${arw('M6 15l6-6 6 6')}</button><button type="button" onclick="emgMove(${i},1)" ${i<EMG_LIST.length-1?'':'disabled'} aria-label="아래로">${arw('M6 9l6 6 6-6')}</button></div></td>
+      <td><select class="ddl" onchange="emgSet(${i},this.value)">${SLIDE_DATA.shortcuts.map(function(x){ const used=x.id!==id&&EMG_LIST.indexOf(x.id)>=0; return `<option value="${x.id}" ${x.id===id?'selected':''} ${used?'disabled':''}>${esc(x.name)}</option>`; }).join('')}</select></td>
+      <td><span class="lnb-addr" title="${esc(scAddr(s))}">${esc(scAddr(s))}</span></td>
+      <td><button type="button" class="emg-del" onclick="emgDel(${i})" aria-label="삭제" title="삭제">${TRASH_SVG}</button></td></tr>`; }).join('');
+  return `<div class="tcard emg-menu"><div class="thead"><span>장애 시 노출할 다른 학습 메뉴 <small>자동 로그인 링크에 등록된 바로가기에서 고릅니다.</small></span><span class="ta"><button type="button" class="btn-line" onclick="emgAdd()">+ 추가</button></span></div>
+    <table class="gt"><thead><tr><th style="width:110px">순서</th><th style="width:300px">바로가기</th><th>연결 주소</th><th style="width:70px">삭제</th></tr></thead>
+    <tbody>${rows||'<tr><td colspan="4" class="empty">추가된 메뉴가 없습니다.</td></tr>'}</tbody></table>
+    <div class="emg-foot"><button type="button" class="btn btn-primary" onclick="emgSave()">저장</button></div></div>`;
+};
+
+/* ---------- 2) 이벤트: 이벤트명 구분 · 직접 입력 삭제 ---------- */
+(function(){
+  const nm={'evt1':'2026 가을 출석체크 이벤트','evt2':'2026 여름 출석체크 이벤트','evt3':'2026 봄 출석체크 이벤트','evt4':'2025 겨울 출석체크 이벤트'};
+  badgeEvents.rows.forEach(function(r){ if(nm[r.id]&&r.name==='출석체크 이벤트') r.name=nm[r.id]; });
+})();
+
+/* ---------- 3) 용어 통일 ---------- */
+const TERM66_ALL=[[/^LNB 노출 N$/,'숨김'],[/^LNB 노출 여부$/,'노출 여부'],[/^LNB 노출$/,'노출'],[/^노출여부$/,'노출 여부'],[/^미노출$/,'숨김'],[/^노출기간$/,'노출 기간']];
+const TERM66_USE=[[/^사용여부$/,'노출 여부'],[/^사용 여부$/,'노출 여부'],[/^사용$/,'노출'],[/^미사용$/,'숨김'],[/^사용 중$/,'노출 중'],[/^사용 예정$/,'노출 예정'],[/^사용 종료$/,'노출 종료'],[/^사용기간$/,'노출 기간']];
+function term66(t,useMenu){
+  if(t.indexOf('미노출')>=0) t=t.replace(/미노출/g,'숨김');
+  t=t.replace('LNB 노출 Y이고 노출 기간 중인','노출로 설정되고 노출 기간 중인');
+  const m=t.match(/^(\s*)(.*?)(\s*)$/), core=m[2];
+  const rules=useMenu?TERM66_ALL.concat(TERM66_USE):TERM66_ALL;
+  for(let i=0;i<rules.length;i++){ if(rules[i][0].test(core)) return m[1]+core.replace(rules[i][0],rules[i][1])+m[3]; }
+  if(useMenu) t=t.replace(/ · 사용 중$/,' · 노출 중');
+  return t;
+}
+function termWalk66(root){
+  const useMenu=state.menu==='product-main'||state.menu==='survey-main';
+  const w=document.createTreeWalker(root,NodeFilter.SHOW_TEXT,null); let n;
+  while((n=w.nextNode())){ const p=n.parentNode; if(!p||p.tagName==='TEXTAREA'||p.tagName==='SCRIPT'||p.tagName==='STYLE') continue; if(p.closest&&p.closest('.tip-b')) continue; const t=term66(n.data,useMenu); if(t!==n.data) n.data=t; }
+}
+const _st66=showToast;
+showToast=function(m){ const u=state.menu==='product-main'||state.menu==='survey-main'; let s=String(m).replace(/미노출/g,'숨김'); if(u) s=s.replace(/미사용/g,'숨김').replace(/사용 상태/g,'노출 상태'); arguments[0]=s; return _st66.apply(this,arguments); };
+Object.keys(TIPS).forEach(function(k){ TIPS[k]=String(TIPS[k]).replace(/미노출/g,'숨김'); });
+TIPS['노출 여부']=TIPS['노출 여부']||'숨김으로 두면 노출 기간과 관계없이 앱에 보이지 않습니다.';
+
+/* ---------- 1)·2) 화면 정리 (렌더 후) ---------- */
+function clean66(){
+  const main=document.getElementById('main'); if(!main) return;
+  const rmCol=function(label){ main.querySelectorAll('table').forEach(function(tb){ const ths=[...tb.querySelectorAll('thead th')]; const i=ths.findIndex(function(th){ return th.textContent.replace(/[?\s]/g,'')===label; }); if(i<0) return; tb.querySelectorAll('tr').forEach(function(tr){ const c=tr.children[i]; if(c&&!c.hasAttribute('colspan')) c.remove(); }); }); };
+  if(state.mode==='list'){
+    main.querySelectorAll('.pt-back').forEach(function(b){ b.remove(); });
+    main.querySelectorAll('.chk-col').forEach(function(c){ c.remove(); });
+  }
+  if(state.mode==='list'&&state.menu==='auth-log'){
+    main.querySelectorAll('button[onclick^="lgRefresh"]').forEach(function(b){ b.remove(); });
+    main.querySelectorAll('tbody tr').forEach(function(tr){ const b=tr.querySelector('.lg-act button'); if(!b) return; const on=b.getAttribute('onclick'); tr.classList.add('lg-row'); tr.setAttribute('tabindex','0'); tr.setAttribute('onclick',on); tr.setAttribute('onkeydown',"if(event.key==='Enter'){"+on+"}"); tr.title='눌러서 상세 보기'; });
+    rmCol('변경데이터');
+  }
+  if(state.menu==='auth-perm'){
+    main.querySelectorAll('.pm-sum').forEach(function(x){ x.remove(); });
+    main.querySelectorAll('button[onclick^="ptExpand"]').forEach(function(b){ b.remove(); });
+  }
+  if(state.menu==='app-voc'){ main.querySelectorAll('.kpis').forEach(function(x){ x.remove(); }); rmCol('시리얼번호'); }
+  if(state.mode==='list'&&state.menu==='content-lnb') rmCol('링크방식');
+  if(state.mode==='edit'&&EDIT_ROUTES[state.editKey]&&EDIT_ROUTES[state.editKey].kind==='product'){
+    ['f-code','f-name','f-sys'].forEach(function(id){ const el=document.getElementById(id); if(el&&!el.readOnly){ el.readOnly=true; el.classList.add('ro-in'); el.setAttribute('tabindex','-1'); if(!el.value) el.placeholder='-'; } });
+    main.querySelectorAll('button[onclick^="svNew("]').forEach(function(b){ b.remove(); });
+    main.querySelectorAll('button[onclick^="svOpen("]').forEach(function(b){ b.textContent='설문 관리에서 보기'; });
+    main.querySelectorAll('.sv-card-f span').forEach(function(s){ s.textContent=s.textContent.replace(/ 고치면 함께 바뀝니다\./,''); });
+  }
+  main.querySelectorAll('.ev-custom-l').forEach(function(l){ l.remove(); });
+  termWalk66(main);
+}
+const _r66=render;
+render=function(){ const x=_r66.apply(this,arguments); try{ clean66(); }catch(e){ console.error(e); } return x; };
 render();
 </script>
 </body>
